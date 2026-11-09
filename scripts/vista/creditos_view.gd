@@ -1,0 +1,2 @@
+class_name CreditosView
+extends Pantalla

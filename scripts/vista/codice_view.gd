@@ -1,0 +1,2 @@
+class_name CodiceView
+extends Pantalla

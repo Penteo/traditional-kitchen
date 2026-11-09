@@ -1,0 +1,2 @@
+class_name EscenaCocinaView
+extends Node2D

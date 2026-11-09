@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://dvv8xvmdcjab8"]
+
+[ext_resource type="Script" uid="uid://c30eyrybsh3j5" path="res://scripts/vista/ficha_receta_view.gd" id="1"]
+
+[node name="FichaReceta" type="Control" unique_id=1021315233]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1")
