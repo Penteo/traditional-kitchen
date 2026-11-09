@@ -1,23 +1,23 @@
 # Traditional Kitchen
 
 Videojuego de cocina cooperativo local para 2 jugadores (Windows).
-Proyecto acadÈmico, Electiva Profesional II: Videojuegos, UDI.
+Proyecto acad√©mico, Electiva Profesional II: Videojuegos, UDI.
 
-Integrantes: Yeison Su·rez Su·rez, Juan David Sep˙lveda Rojas, Eber Arley Arias Osorio.
+Integrantes: Yeison Su√°rez Su√°rez, Juan David Sep√∫lveda Rojas, Eber Arley Arias Osorio.
 
 ## Requisitos
-- Godot: versiÛn X.Y.Z (ESCRIBIR AQUÕ LA VERSI”N EXACTA)
+- Godot: versi√≥n 4.7.1 (ESCRIBIR AQU√ç LA VERSI√ìN EXACTA)
 - Git y Git LFS
 
-## CÛmo abrir el proyecto
+## C√≥mo abrir el proyecto
 1. Clonar el repositorio.
 2. Abrir Godot, pulsar Importar y elegir el archivo project.godot.
 
-## CÛmo ejecutar
+## C√≥mo ejecutar
 Pulsar F5 (la escena principal es scenes/main/main.tscn).
 
-## CÛmo exportar
+## C√≥mo exportar
 Project > Export > Windows Desktop, salida en la carpeta builds/.
 
-## DocumentaciÛn
-El GDD est· en la carpeta docs/.
+## Documentaci√≥n
+El GDD est√° en la carpeta docs/.
