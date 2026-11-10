@@ -2,11 +2,13 @@ class_name ChefController
 extends Node
 ## Mueve a los chefs y resuelve sus acciones en cada ciclo de fisica. Orden: J1 y luego J2.
 
-## Se emite al terminar las acciones de ambos chefs; el reloj de la partida avanza las estaciones despues.
+## Se emite al terminar las acciones de ambos chefs; el reloj de la partida avanza despues.
 signal ciclo_terminado(delta: float)
 
 enum Accion { INTERACTUAR, PROCESAR }
 
+## False durante la ficha, la cuenta atras, la pausa y los resultados (controles bloqueados).
+var habilitado: bool = true
 var chefs: Array[Chef] = []
 
 
@@ -17,14 +19,15 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
-	var pedidos: Array[Dictionary] = []
-	for chef in chefs:
-		chef.mover(InputController.obtener_vector(chef.numero_jugador))
-		if InputController.interactuar_presionado(chef.numero_jugador):
-			pedidos.append({"chef": chef, "accion": Accion.INTERACTUAR})
-		elif InputController.procesar_presionado(chef.numero_jugador):
-			pedidos.append({"chef": chef, "accion": Accion.PROCESAR})
-	resolver_acciones(pedidos)
+	if habilitado:
+		var pedidos: Array[Dictionary] = []
+		for chef in chefs:
+			chef.mover(InputController.obtener_vector(chef.numero_jugador))
+			if InputController.interactuar_presionado(chef.numero_jugador):
+				pedidos.append({"chef": chef, "accion": Accion.INTERACTUAR})
+			elif InputController.procesar_presionado(chef.numero_jugador):
+				pedidos.append({"chef": chef, "accion": Accion.PROCESAR})
+		resolver_acciones(pedidos)
 	ciclo_terminado.emit(delta)
 
 

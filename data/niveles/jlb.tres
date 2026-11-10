@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="Nivel" load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/modelo/recursos/nivel.gd" id="1"]
+[ext_resource type="Resource" path="res://data/recetas/arepa_con_queso.tres" id="2"]
+[ext_resource type="Resource" path="res://data/recetas/empanadas.tres" id="3"]
+[ext_resource type="Resource" path="res://data/recetas/mute_santandereano.tres" id="4"]
+
+[resource]
+script = ExtResource("1")
+numero = 2
+nombre = "JLB"
+duracion = 210.0
+cuota = 450
+intervalo_pedidos = 20.0
+cupo_pedidos = 4
+primer_pedido = 5.0
+ventana_sin_pedidos = 40.0
+secuencia_pedidos = [ExtResource("2"), ExtResource("3"), ExtResource("4"), ExtResource("2"), ExtResource("3"), ExtResource("2"), ExtResource("4"), ExtResource("3"), ExtResource("2")]
