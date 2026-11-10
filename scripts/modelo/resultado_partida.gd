@@ -13,6 +13,10 @@ var rechazados: int = 0
 var quemados: int = 0
 ## Provisional: plato con mas entregas en este nivel; en empate gana el que llego primero a ese maximo.
 var plato_mas_entregado: String = ""
+## Entradas del Codice desbloqueadas en esta partida ("Nueva entrada desbloqueada").
+var entradas_nuevas: Array[EntradaCodice] = []
+## Dato curioso del plato mas entregado. Solo se rellena si no hay entradas nuevas.
+var dato_curioso: String = ""
 
 var _por_receta: Dictionary = {}
 

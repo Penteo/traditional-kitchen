@@ -15,4 +15,5 @@ intervalo_pedidos = 20.0
 cupo_pedidos = 4
 primer_pedido = 5.0
 ventana_sin_pedidos = 40.0
+frase_antagonista = "Hoy hay mute y el hambre no perdona. Sin cuota no hay semestre. ¡Más rápido!"
 secuencia_pedidos = [ExtResource("2"), ExtResource("3"), ExtResource("4"), ExtResource("2"), ExtResource("3"), ExtResource("2"), ExtResource("4"), ExtResource("3"), ExtResource("2")]

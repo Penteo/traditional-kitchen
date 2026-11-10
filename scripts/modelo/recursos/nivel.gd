@@ -10,6 +10,8 @@ extends Resource
 @export var cupo_pedidos: int = 3
 @export var primer_pedido: float = 5.0
 @export var ventana_sin_pedidos: float = 30.0
+## Frase del antagonista para la ficha de receta (maximo 20 palabras).
+@export var frase_antagonista: String = ""
 ## Secuencia fija de pedidos: cada elemento es una Receta.
 @export var secuencia_pedidos: Array = []
 

@@ -14,4 +14,5 @@ intervalo_pedidos = 25.0
 cupo_pedidos = 3
 primer_pedido = 5.0
 ventana_sin_pedidos = 30.0
+frase_antagonista = "Arepas y empanadas, estudiantes. Si no llegan a la cuota, mi firma les cancela la matrícula. ¡Cocinen!"
 secuencia_pedidos = [ExtResource("2"), ExtResource("3"), ExtResource("2"), ExtResource("3"), ExtResource("2"), ExtResource("3")]
