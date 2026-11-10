@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="Receta" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/modelo/recursos/receta.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+nombre = "Mute santandereano"
+region = "Santander"
+componentes = PackedInt32Array(5)
+estados_componentes = PackedInt32Array(2)
+unidades_por_pedido = 1
+valor_base = 120
+limite_tiempo = 100.0
+simplificacion = "Solo papa y carne cocidas en olla; la receta tradicional se documenta en el Códice"

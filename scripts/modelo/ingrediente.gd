@@ -25,6 +25,15 @@ func _init(p_tipo: Tipo = Tipo.MASA, p_estado: Estado = Estado.CRUDO) -> void:
 	estado = p_estado
 
 
+## Clave que identifica "tipo + estado". Sirve para comparar la composicion de un plato con una receta.
+static func hacer_clave(p_tipo: int, p_estado: int) -> String:
+	return "%d_%d" % [p_tipo, p_estado]
+
+
+func clave() -> String:
+	return hacer_clave(tipo, estado)
+
+
 func etiqueta() -> String:
 	return "%s (%s)" % [NOMBRES[tipo], ESTADOS[estado]]
 
