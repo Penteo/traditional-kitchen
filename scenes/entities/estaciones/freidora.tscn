@@ -1,0 +1,15 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/modelo/estaciones/freidora.gd" id="1"]
+[ext_resource type="Resource" path="res://data/estaciones/parametros_freidora.tres" id="2"]
+
+[sub_resource type="RectangleShape2D" id="Rect_estacion"]
+size = Vector2(120, 120)
+
+[node name="Freidora" type="StaticBody2D"]
+collision_layer = 2
+script = ExtResource("1")
+parametros = ExtResource("2")
+
+[node name="Colision" type="CollisionShape2D" parent="."]
+shape = SubResource("Rect_estacion")
