@@ -1,0 +1,149 @@
+[gd_scene load_steps=12 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/entities/estaciones/surtidor.tscn" id="1"]
+[ext_resource type="PackedScene" path="res://scenes/entities/estaciones/cesto_basura.tscn" id="2"]
+[ext_resource type="PackedScene" path="res://scenes/entities/estaciones/plancha.tscn" id="3"]
+[ext_resource type="PackedScene" path="res://scenes/entities/estaciones/freidora.tscn" id="4"]
+[ext_resource type="PackedScene" path="res://scenes/entities/estaciones/barra_entrega.tscn" id="5"]
+[ext_resource type="PackedScene" path="res://scenes/entities/estaciones/dispensador_platos.tscn" id="6"]
+[ext_resource type="PackedScene" path="res://scenes/entities/estaciones/tabla_cortar.tscn" id="7"]
+[ext_resource type="PackedScene" path="res://scenes/entities/estaciones/olla.tscn" id="8"]
+
+[sub_resource type="RectangleShape2D" id="Forma_1280x40"]
+size = Vector2(1280, 40)
+
+[sub_resource type="RectangleShape2D" id="Forma_40x920"]
+size = Vector2(40, 920)
+
+[sub_resource type="RectangleShape2D" id="Forma_120x120"]
+size = Vector2(120, 120)
+
+[node name="JLB" type="Node2D"]
+
+[node name="Fondo" type="ColorRect" parent="."]
+offset_right = 1920.0
+offset_bottom = 1080.0
+mouse_filter = 2
+color = Color(0.22, 0.12, 0.08, 1)
+
+[node name="Suelo" type="ColorRect" parent="."]
+offset_left = 360.0
+offset_top = 120.0
+offset_right = 1560.0
+offset_bottom = 960.0
+mouse_filter = 2
+color = Color(0.85, 0.6, 0.35, 1)
+
+[node name="MuroSuperior" type="StaticBody2D" parent="."]
+position = Vector2(960, 100)
+collision_layer = 4
+
+[node name="Colision" type="CollisionShape2D" parent="MuroSuperior"]
+shape = SubResource("Forma_1280x40")
+
+[node name="MuroInferior" type="StaticBody2D" parent="."]
+position = Vector2(960, 980)
+collision_layer = 4
+
+[node name="Colision" type="CollisionShape2D" parent="MuroInferior"]
+shape = SubResource("Forma_1280x40")
+
+[node name="MuroIzquierdo" type="StaticBody2D" parent="."]
+position = Vector2(340, 540)
+collision_layer = 4
+
+[node name="Colision" type="CollisionShape2D" parent="MuroIzquierdo"]
+shape = SubResource("Forma_40x920")
+
+[node name="MuroDerecho" type="StaticBody2D" parent="."]
+position = Vector2(1580, 540)
+collision_layer = 4
+
+[node name="Colision" type="CollisionShape2D" parent="MuroDerecho"]
+shape = SubResource("Forma_40x920")
+
+[node name="Mostrador1" type="StaticBody2D" parent="."]
+position = Vector2(780, 540)
+collision_layer = 4
+
+[node name="Colision" type="CollisionShape2D" parent="Mostrador1"]
+shape = SubResource("Forma_120x120")
+
+[node name="Forma" type="ColorRect" parent="Mostrador1"]
+offset_left = -60.0
+offset_top = -60.0
+offset_right = 60.0
+offset_bottom = 60.0
+mouse_filter = 2
+color = Color(0.6, 0.3, 0.15, 1)
+
+[node name="Mostrador2" type="StaticBody2D" parent="."]
+position = Vector2(1140, 540)
+collision_layer = 4
+
+[node name="Colision" type="CollisionShape2D" parent="Mostrador2"]
+shape = SubResource("Forma_120x120")
+
+[node name="Forma" type="ColorRect" parent="Mostrador2"]
+offset_left = -60.0
+offset_top = -60.0
+offset_right = 60.0
+offset_bottom = 60.0
+mouse_filter = 2
+color = Color(0.6, 0.3, 0.15, 1)
+
+[node name="SurtidorMasa" parent="." instance=ExtResource("1")]
+position = Vector2(540, 180)
+tipo = 0
+
+[node name="SurtidorQueso" parent="." instance=ExtResource("1")]
+position = Vector2(660, 180)
+tipo = 1
+
+[node name="SurtidorEmpanada" parent="." instance=ExtResource("1")]
+position = Vector2(780, 180)
+tipo = 2
+
+[node name="SurtidorPapa" parent="." instance=ExtResource("1")]
+position = Vector2(1140, 180)
+tipo = 3
+
+[node name="SurtidorCarne" parent="." instance=ExtResource("1")]
+position = Vector2(1260, 180)
+tipo = 4
+
+[node name="Cesto" parent="." instance=ExtResource("2")]
+position = Vector2(1500, 180)
+
+[node name="Plancha" parent="." instance=ExtResource("3")]
+position = Vector2(420, 420)
+
+[node name="Freidora1" parent="." instance=ExtResource("4")]
+position = Vector2(420, 540)
+
+[node name="Freidora2" parent="." instance=ExtResource("4")]
+position = Vector2(420, 660)
+
+[node name="Barra" parent="." instance=ExtResource("5")]
+position = Vector2(1500, 420)
+
+[node name="Dispensador" parent="." instance=ExtResource("6")]
+position = Vector2(1500, 660)
+
+[node name="TablaCortar1" parent="." instance=ExtResource("7")]
+position = Vector2(900, 540)
+
+[node name="TablaCortar2" parent="." instance=ExtResource("7")]
+position = Vector2(1020, 540)
+
+[node name="Olla1" parent="." instance=ExtResource("8")]
+position = Vector2(900, 900)
+
+[node name="Olla2" parent="." instance=ExtResource("8")]
+position = Vector2(1020, 900)
+
+[node name="SpawnJ1" type="Marker2D" parent="."]
+position = Vector2(660, 300)
+
+[node name="SpawnJ2" type="Marker2D" parent="."]
+position = Vector2(1260, 780)

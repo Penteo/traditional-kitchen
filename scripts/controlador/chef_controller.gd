@@ -4,10 +4,12 @@ extends Node
 
 ## Se emite al terminar las acciones de ambos chefs; el reloj de la partida avanza despues.
 signal ciclo_terminado(delta: float)
+## Una interaccion sin efecto (deposito incompatible, manos llenas, nada delante...).
+signal accion_invalida(chef: Chef)
 
 enum Accion { INTERACTUAR, PROCESAR }
 
-## False durante la ficha, la cuenta atras, la pausa y los resultados (controles bloqueados).
+## False durante la cuenta atras, la pausa y los resultados (controles bloqueados).
 var habilitado: bool = true
 var chefs: Array[Chef] = []
 
@@ -37,20 +39,29 @@ func resolver_acciones(pedidos: Array[Dictionary]) -> void:
 	for pedido in pedidos:
 		var chef: Chef = pedido["chef"]
 		var estacion := chef.estacion_objetivo()
-		if estacion == null or usadas.has(estacion):
+		if estacion == null:
+			if pedido["accion"] == Accion.INTERACTUAR:
+				accion_invalida.emit(chef)
+			continue
+		if usadas.has(estacion):
 			continue
 		usadas.append(estacion)
 		match pedido["accion"]:
 			Accion.INTERACTUAR:
-				interactuar(chef, estacion)
+				if not interactuar(chef, estacion):
+					accion_invalida.emit(chef)
 			Accion.PROCESAR:
 				estacion.procesar()
 
 
 ## Tabla 14: depositar en estacion compatible, retirar o recoger de un surtidor. Lo incompatible no tiene efecto.
-func interactuar(chef: Chef, estacion: Estacion) -> void:
+func interactuar(chef: Chef, estacion: Estacion) -> bool:
 	if chef.sostiene_item():
 		if estacion.acepta(chef.item_en_mano):
 			estacion.recibir(chef.soltar())
-	elif estacion.puede_entregar():
+			return true
+		return false
+	if estacion.puede_entregar():
 		chef.tomar(estacion.retirar())
+		return true
+	return false

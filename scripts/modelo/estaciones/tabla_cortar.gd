@@ -2,6 +2,8 @@ class_name TablaCortar
 extends Estacion
 ## Corta queso, papa y carne con una sola pulsacion de Procesar. No se quema.
 
+signal corte_iniciado
+
 @export var parametros: ParametrosTabla
 
 var cortando: bool = false
@@ -34,6 +36,7 @@ func procesar() -> void:
 	cortando = true
 	progreso = 0.0
 	tiempo_total = parametros.tiempo_para(ingrediente.tipo)
+	corte_iniciado.emit()
 	queue_redraw()
 
 

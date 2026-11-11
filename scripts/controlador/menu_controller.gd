@@ -62,10 +62,9 @@ func _mostrar(nombre: String, datos: Dictionary) -> void:
 	if pantalla_actual != null:
 		pantalla_actual.queue_free()
 	var nueva := (load(PANTALLAS[nombre]) as PackedScene).instantiate()
-	var pantalla := nueva as Pantalla
-	if pantalla != null:
-		pantalla.preparar(datos)
-		_conectar(pantalla)
+	if nueva.has_method("preparar"):
+		nueva.call("preparar", datos)
+	_conectar(nueva)
 	add_child(nueva)
 	pantalla_actual = nueva
 	nombre_actual = nombre
@@ -73,9 +72,11 @@ func _mostrar(nombre: String, datos: Dictionary) -> void:
 		AudioController.reproducir_pista("menu")
 
 
-func _conectar(pantalla: Pantalla) -> void:
-	pantalla.volver_solicitado.connect(volver)
-	var menu := pantalla as MenuPrincipalView
+func _conectar(nueva: Node) -> void:
+	var pantalla := nueva as Pantalla
+	if pantalla != null:
+		pantalla.volver_solicitado.connect(volver)
+	var menu := nueva as MenuPrincipalView
 	if menu != null:
 		menu.jugar_solicitado.connect(navegar.bind("seleccion_nivel"))
 		menu.como_jugar_solicitado.connect(navegar.bind("como_jugar"))
@@ -83,12 +84,16 @@ func _conectar(pantalla: Pantalla) -> void:
 		menu.opciones_solicitado.connect(navegar.bind("opciones"))
 		menu.creditos_solicitado.connect(navegar.bind("creditos"))
 		menu.salir_solicitado.connect(salir)
-	var seleccion := pantalla as SeleccionNivelView
+	var seleccion := nueva as SeleccionNivelView
 	if seleccion != null:
 		seleccion.nivel_elegido.connect(seleccionar_nivel)
-	var ficha := pantalla as FichaRecetaView
+	var ficha := nueva as FichaRecetaView
 	if ficha != null:
 		ficha.ficha_terminada.connect(_iniciar_partida)
+	var cocina := nueva as EscenaCocinaView
+	if cocina != null:
+		cocina.salir_solicitado.connect(navegar.bind("menu_principal"))
+		cocina.continuar_solicitado.connect(navegar.bind("seleccion_nivel"))
 
 
 ## La ficha termina (5 s o se omite) y empieza la partida; la ficha no queda en el historial.
@@ -96,6 +101,7 @@ func _iniciar_partida() -> void:
 	navegar("escena_cocina", {"nivel": Nivel.cargar(nivel_seleccionado)}, false)
 
 
+## Esc vuelve a la pantalla anterior, salvo en el menu principal y en la partida (alli Esc es la pausa).
 func _unhandled_input(evento: InputEvent) -> void:
-	if evento.is_action_pressed("ui_cancel") and nombre_actual != "menu_principal":
+	if evento.is_action_pressed("ui_cancel") and nombre_actual != "menu_principal" and nombre_actual != "escena_cocina":
 		volver()
