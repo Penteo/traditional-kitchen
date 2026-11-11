@@ -2,6 +2,11 @@ class_name Nivel
 extends Resource
 ## Datos de un nivel (Tablas 18 y 20 del GDD). Solo lectura durante la partida.
 
+const RUTAS: Array[String] = [
+	"res://data/niveles/enrico_fermi.tres",
+	"res://data/niveles/jlb.tres",
+]
+
 @export var numero: int = 1
 @export var nombre: String = ""
 @export var duracion: float = 180.0
@@ -14,6 +19,15 @@ extends Resource
 @export var frase_antagonista: String = ""
 ## Secuencia fija de pedidos: cada elemento es una Receta.
 @export var secuencia_pedidos: Array = []
+
+
+## Carga el nivel por su numero (1 = Enrico Fermi, 2 = JLB).
+static func cargar(p_numero: int) -> Nivel:
+	return load(RUTAS[p_numero - 1]) as Nivel
+
+
+static func total() -> int:
+	return RUTAS.size()
 
 
 func secuencia_tipada() -> Array[Receta]:
