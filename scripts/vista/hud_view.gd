@@ -23,6 +23,7 @@ var _relleno_puntos: ColorRect
 var _barras_pedido: Array[Dictionary] = []
 var _etiquetas_chef: Array[Label] = []
 var _iconos_chef: Array[ColorRect] = []
+var _numeros_vistos: Array[int] = []
 
 
 func _construir() -> void:
@@ -190,7 +191,21 @@ func _tarjeta(pedido: Pedido) -> PanelContainer:
 	barra.add_child(relleno)
 	caja.add_child(barra)
 	_barras_pedido.append({"pedido": pedido, "relleno": relleno})
+	if not _numeros_vistos.has(pedido.numero):
+		_numeros_vistos.append(pedido.numero)
+		_animar_entrada(tarjeta)
 	return tarjeta
+
+
+## Visual del SFX7 (Tabla 23): la tarjeta nueva entra creciendo y con fundido.
+func _animar_entrada(tarjeta: Control) -> void:
+	tarjeta.pivot_offset = Vector2(0.0, 50.0)
+	tarjeta.scale = Vector2(0.4, 0.4)
+	tarjeta.modulate.a = 0.0
+	var animacion := create_tween()
+	animacion.set_parallel(true)
+	animacion.tween_property(tarjeta, "scale", Vector2.ONE, 0.35).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	animacion.tween_property(tarjeta, "modulate:a", 1.0, 0.25)
 
 
 func _componentes(receta: Receta) -> String:

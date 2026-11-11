@@ -30,6 +30,9 @@ func _physics_process(delta: float) -> void:
 			elif InputController.procesar_presionado(chef.numero_jugador):
 				pedidos.append({"chef": chef, "accion": Accion.PROCESAR})
 		resolver_acciones(pedidos)
+	else:
+		for chef in chefs:
+			chef.detener()
 	ciclo_terminado.emit(delta)
 
 
@@ -41,7 +44,7 @@ func resolver_acciones(pedidos: Array[Dictionary]) -> void:
 		var estacion := chef.estacion_objetivo()
 		if estacion == null:
 			if pedido["accion"] == Accion.INTERACTUAR:
-				accion_invalida.emit(chef)
+				_avisar_invalida(chef)
 			continue
 		if usadas.has(estacion):
 			continue
@@ -49,7 +52,7 @@ func resolver_acciones(pedidos: Array[Dictionary]) -> void:
 		match pedido["accion"]:
 			Accion.INTERACTUAR:
 				if not interactuar(chef, estacion):
-					accion_invalida.emit(chef)
+					_avisar_invalida(chef)
 			Accion.PROCESAR:
 				estacion.procesar()
 
@@ -65,3 +68,8 @@ func interactuar(chef: Chef, estacion: Estacion) -> bool:
 		chef.tomar(estacion.retirar())
 		return true
 	return false
+
+
+func _avisar_invalida(chef: Chef) -> void:
+	chef.marcar_accion_invalida()
+	accion_invalida.emit(chef)

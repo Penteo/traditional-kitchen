@@ -1,8 +1,10 @@
 class_name Chef
 extends CharacterBody2D
-## Chef controlado por un jugador. Se desplaza y lleva como máximo un ítem (R1).
+## Chef controlado por un jugador. Se desplaza y lleva como maximo un item (R1). El dibujo vive en ChefView.
 
 signal item_cambiado
+## Una accion sin efecto: ChefView hace parpadear el icono del item (Tabla 23, SFX3).
+signal accion_invalida
 
 enum Direccion { ARRIBA, ABAJO, IZQUIERDA, DERECHA }
 
@@ -24,7 +26,6 @@ func _ready() -> void:
 	($Colision.shape as CircleShape2D).radius = parametros.radio_colision
 	($ZonaInteraccion/Colision.shape as CircleShape2D).radius = parametros.radio_zona_interaccion
 	_actualizar_zona()
-	queue_redraw()
 
 
 func mover(vector: Vector2) -> void:
@@ -35,7 +36,11 @@ func mover(vector: Vector2) -> void:
 		if nueva != direccion:
 			direccion = nueva
 			_actualizar_zona()
-			queue_redraw()
+
+
+## Se queda quieto (pausa, cuenta atras y resultados).
+func detener() -> void:
+	velocity = Vector2.ZERO
 
 
 func sostiene_item() -> bool:
@@ -48,7 +53,6 @@ func tomar(item: Item) -> bool:
 		return false
 	item_en_mano = item
 	item_cambiado.emit()
-	queue_redraw()
 	return true
 
 
@@ -56,8 +60,11 @@ func soltar() -> Item:
 	var item := item_en_mano
 	item_en_mano = null
 	item_cambiado.emit()
-	queue_redraw()
 	return item
+
+
+func marcar_accion_invalida() -> void:
+	accion_invalida.emit()
 
 
 ## Estación más cercana dentro de la zona de interacción (delante del chef).
@@ -73,6 +80,10 @@ func estacion_objetivo() -> Estacion:
 			mejor_distancia = distancia
 			mejor = estacion
 	return mejor
+
+
+func vector_direccion() -> Vector2:
+	return _vector_de(direccion)
 
 
 func _actualizar_zona() -> void:
@@ -94,13 +105,3 @@ func _vector_de(d: Direccion) -> Vector2:
 		Direccion.IZQUIERDA:
 			return Vector2.LEFT
 	return Vector2.RIGHT
-
-
-# Dibujo provisional hasta tener el arte final.
-func _draw() -> void:
-	draw_circle(Vector2.ZERO, parametros.radio_colision, color)
-	draw_line(Vector2.ZERO, _vector_de(direccion) * parametros.radio_colision, Color.WHITE, 4.0)
-	if item_en_mano != null:
-		var posicion := Vector2(0.0, -parametros.radio_colision - 24.0)
-		draw_circle(posicion, 16.0, item_en_mano.color())
-		draw_string(ThemeDB.fallback_font, posicion + Vector2(-60.0, -24.0), item_en_mano.etiqueta(), HORIZONTAL_ALIGNMENT_CENTER, 120.0, 20)

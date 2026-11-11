@@ -7,6 +7,9 @@ signal alimento_quemado
 
 enum Estado { VACIA, PROCESANDO, LISTO, PELIGRO, QUEMADO }
 
+## Duracion del destello al quemarse (efecto visual de la seccion 6.2).
+const DURACION_DESTELLO: float = 0.6
+
 @export var parametros: ParametrosCoccion
 
 var estado: Estado = Estado.VACIA
@@ -15,6 +18,8 @@ var tiempo_desde_listo: float = 0.0
 var tipos_aceptados: Array[Ingrediente.Tipo] = []
 var estado_requerido: Ingrediente.Estado = Ingrediente.Estado.CRUDO
 var items_para_iniciar: int = 1
+
+var _destello: float = 0.0
 
 
 ## Cada estacion concreta fija aqui lo que acepta.
@@ -54,6 +59,9 @@ func recibir(item: Item) -> bool:
 
 
 func actualizar(delta: float) -> void:
+	if _destello > 0.0:
+		_destello = maxf(0.0, _destello - delta / DURACION_DESTELLO)
+		queue_redraw()
 	match estado:
 		Estado.PROCESANDO:
 			tiempo_coccion_actual += delta
@@ -94,6 +102,7 @@ func _resultado_cocido() -> Array[Item]:
 func _quemar() -> void:
 	for item in items:
 		(item as Ingrediente).estado = Ingrediente.Estado.QUEMADO
+	_destello = 1.0
 	alimento_quemado.emit()
 	_cambiar_estado(Estado.QUEMADO)
 
@@ -127,3 +136,6 @@ func _dibujar_extra(tamano: Vector2) -> void:
 			alerta = Color.BLACK
 	if alerta.a > 0.0:
 		draw_circle(Vector2(tamano.x / 2.0 - 16.0, -tamano.y / 2.0 + 16.0), 12.0, alerta)
+	# Destello al quemarse: un velo blanco que se desvanece.
+	if _destello > 0.0:
+		draw_rect(Rect2(-tamano / 2.0, tamano), Color(1.0, 1.0, 1.0, 0.85 * _destello))
