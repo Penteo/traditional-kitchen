@@ -164,3 +164,11 @@ func _probar_umbrales() -> void:
 		print("Frase %s: %d palabras (maximo 20) %s" % [nivel.nombre, palabras, "OK" if palabras <= 20 else "FALLA"])
 	var antagonista := load("res://data/antagonista.tres") as DatosAntagonista
 	print("Antagonista: %s" % antagonista.nombre)
+
+
+func _pulsadas(acciones: Array[String]) -> String:
+	var lista := PackedStringArray()
+	for accion in acciones:
+		if Input.is_action_pressed(accion):
+			lista.append(accion.substr(3))
+	return ", ".join(lista)
