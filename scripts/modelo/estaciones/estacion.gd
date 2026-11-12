@@ -119,10 +119,18 @@ func _draw() -> void:
 	else:
 		draw_rect(Rect2(-tamano / 2.0, tamano), color_placeholder)
 		draw_string(fuente, Vector2(-tamano.x / 2.0, -tamano.y / 2.0 - 8.0), nombre, HORIZONTAL_ALIGNMENT_CENTER, tamano.x, 20)
+	var todo_con_arte := _textura != null
+	var paso := 52.0 if _textura != null else 40.0
 	for i in items.size():
-		var x := (i - (items.size() - 1) / 2.0) * 40.0
-		draw_circle(Vector2(x, -10.0), 16.0, items[i].color())
-	if not items.is_empty():
+		var posicion := Vector2((i - (items.size() - 1) / 2.0) * paso, -10.0)
+		if _textura != null:
+			draw_circle(posicion, 30.0, Color(1.0, 1.0, 1.0, 0.85))
+			draw_arc(posicion, 30.0, 0.0, TAU, 32, Color(0.23, 0.14, 0.09), 2.5, true)
+			if IconoItem.dibujar(self, items[i], posicion, 56.0):
+				continue
+			todo_con_arte = false
+		draw_circle(posicion, 16.0, items[i].color())
+	if not items.is_empty() and not todo_con_arte:
 		var lineas := PackedStringArray()
 		for item in items:
 			lineas.append(item.etiqueta())

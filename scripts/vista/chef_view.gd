@@ -14,7 +14,7 @@ const VELOCIDAD_FPS: Dictionary = {"reposo": 4.0, "caminar": 12.0, "cargar": 10.
 const CARPETA_ARTE: String = "res://assets/art/chef/"
 const ESCALA_SPRITE: float = 1.1
 const POSICION_SPRITE: Vector2 = Vector2(0.0, -13.0)
-const ALTURA_ICONO: float = 50.0
+const ALTURA_ICONO: float = 82.0
 const VELOCIDAD_MINIMA: float = 1.0
 const DURACION_PARPADEO: float = 0.45
 
@@ -172,5 +172,10 @@ func _dibujar_item(radio: float) -> void:
 		return
 	var altura := ALTURA_ICONO if _sprite != null else 24.0
 	var posicion := Vector2(0.0, -radio - altura)
+	if _sprite != null:
+		draw_circle(posicion, 38.0, Color(1.0, 1.0, 1.0, 0.92))
+		draw_arc(posicion, 38.0, 0.0, TAU, 40, Color(0.23, 0.14, 0.09), 3.0, true)
+		if IconoItem.dibujar(self, item, posicion, 68.0):
+			return
 	draw_circle(posicion, 16.0, item.color())
 	draw_string(ThemeDB.fallback_font, posicion + Vector2(-60.0, -24.0), item.etiqueta(), HORIZONTAL_ALIGNMENT_CENTER, 120.0, 20)

@@ -23,6 +23,7 @@ var _relleno_puntos: ColorRect
 var _barras_pedido: Array[Dictionary] = []
 var _etiquetas_chef: Array[Label] = []
 var _iconos_chef: Array[ColorRect] = []
+var _vistas_icono_chef: Array[IconoItemControl] = []
 var _numeros_vistos: Array[int] = []
 
 
@@ -62,6 +63,11 @@ func _construir() -> void:
 		add_child(fila)
 		var icono := _cuadro_color(Color.GRAY, 28.0)
 		fila.add_child(icono)
+		var vista_icono := IconoItemControl.new()
+		vista_icono.position = Vector2(-8.0, -8.0)
+		vista_icono.size = Vector2(44.0, 44.0)
+		icono.add_child(vista_icono)
+		_vistas_icono_chef.append(vista_icono)
 		var texto := _etiqueta("", 24, HORIZONTAL_ALIGNMENT_LEFT, Color(0.45, 0.65, 1.0) if i == 0 else Color(1.0, 0.5, 0.5))
 		texto.custom_minimum_size = Vector2(480.0, 0.0)
 		fila.add_child(texto)
@@ -236,5 +242,9 @@ func _refrescar_barras() -> void:
 func _actualizar_chefs() -> void:
 	for i in _chefs.size():
 		var item := _chefs[i].item_en_mano
-		_iconos_chef[i].color = item.color() if item != null else Color(0.35, 0.35, 0.4)
+		var con_arte := _vistas_icono_chef[i].establecer(item)
+		var color_slot := Color(0.35, 0.35, 0.4)
+		if item != null:
+			color_slot = Color(0.0, 0.0, 0.0, 0.0) if con_arte else item.color()
+		_iconos_chef[i].color = color_slot
 		_etiquetas_chef[i].text = "J%d: %s" % [_chefs[i].numero_jugador, item.etiqueta() if item != null else "manos libres"]
