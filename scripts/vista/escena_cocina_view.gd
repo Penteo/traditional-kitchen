@@ -55,6 +55,7 @@ func _construir_partida() -> void:
 	_limpiar()
 	_nivel_escena = (load(ESCENAS_NIVEL[nivel.numero - 1]) as PackedScene).instantiate() as Node2D
 	add_child(_nivel_escena)
+	DecoradoNivel.aplicar(_nivel_escena, nivel.numero)
 	var estaciones: Array[Estacion] = []
 	for hijo in _nivel_escena.get_children():
 		if hijo is Estacion:
