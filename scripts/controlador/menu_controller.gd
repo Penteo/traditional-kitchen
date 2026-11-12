@@ -23,8 +23,26 @@ var pantalla_actual: Node = null
 var _historial: Array[String] = []
 
 
+## Desmarcalo en el Inspector del nodo Main para saltarte la intro 3D mientras desarrollas.
+@export var mostrar_intro: bool = true
+
+const ESCENA_INTRO: PackedScene = preload("res://scenes/ui/intro.tscn")
+
+
 func _ready() -> void:
-	navegar("menu_principal")
+	if mostrar_intro:
+		_mostrar_intro()
+	else:
+		navegar("menu_principal")
+
+
+## Intro 3D: al terminar (o al saltarla) navega al menu principal. Ocupa pantalla_actual para que
+## _mostrar() la libere al navegar.
+func _mostrar_intro() -> void:
+	var intro := ESCENA_INTRO.instantiate() as IntroView
+	pantalla_actual = intro
+	intro.terminada.connect(navegar.bind("menu_principal"), CONNECT_ONE_SHOT)
+	add_child(intro)
 
 
 ## Va a una pantalla. Si ya estaba en el historial, regresa a ella. registrar_actual=false reemplaza la actual.
