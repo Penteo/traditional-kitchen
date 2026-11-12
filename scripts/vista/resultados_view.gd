@@ -20,7 +20,10 @@ func _construir() -> void:
 	var columna := _columna(900.0)
 	var cumplida := resultado.cuota_cumplida
 	columna.add_child(_etiqueta("¡CUOTA CUMPLIDA!" if cumplida else "ORDEN DE EXPULSIÓN", 72, HORIZONTAL_ALIGNMENT_CENTER, Color(0.5, 1.0, 0.5) if cumplida else Color(1.0, 0.4, 0.4)))
-	columna.add_child(_etiqueta("Estrellas: %d de 3" % resultado.estrellas if cumplida else "Sin estrellas", 40))
+	if cumplida:
+		columna.add_child(_estrellas(resultado.estrellas, 3, 72.0))
+	else:
+		columna.add_child(_etiqueta("Sin estrellas", 40))
 	columna.add_child(_etiqueta("Puntaje: %d   |   Cuota: %d" % [resultado.puntaje, resultado.cuota], 34))
 	columna.add_child(_etiqueta("Pedidos entregados: %d\nPedidos vencidos: %d\nPedidos rechazados: %d\nPlatos quemados: %d" % [resultado.entregados, resultado.vencidos, resultado.rechazados, resultado.quemados], 28))
 	if not resultado.entradas_nuevas.is_empty():

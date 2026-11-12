@@ -29,7 +29,7 @@ func _tarjeta(nivel: Nivel, progreso: ProgresoJugador) -> PanelContainer:
 	tarjeta.add_child(contenido)
 	contenido.add_child(_etiqueta(nivel.nombre, 42))
 	contenido.add_child(_etiqueta("Cuota: %d puntos" % nivel.cuota, 28))
-	contenido.add_child(_etiqueta("Estrellas: %d de 3" % progreso.estrellas_de(nivel.numero), 28))
+	contenido.add_child(_estrellas(progreso.estrellas_de(nivel.numero)))
 	var texto_estado := "Disponible" if desbloqueado else "Bloqueado: necesitas al menos 1 estrella en el nivel anterior"
 	var color_estado := Color(0.6, 0.9, 0.6) if desbloqueado else Color(1.0, 0.6, 0.5)
 	contenido.add_child(_etiqueta(texto_estado, 22, HORIZONTAL_ALIGNMENT_CENTER, color_estado))

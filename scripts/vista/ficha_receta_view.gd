@@ -37,9 +37,9 @@ func _fila_receta(receta: Receta) -> PanelContainer:
 	var fila := HBoxContainer.new()
 	fila.add_theme_constant_override("separation", 24)
 	tarjeta.add_child(fila)
-	var icono := _cuadro_color(Ingrediente.COLORES[receta.componentes[0]], 72.0)
-	icono.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	fila.add_child(icono)
+	var iconos := _iconos_receta(receta, 72.0)
+	iconos.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	fila.add_child(iconos)
 	var datos := VBoxContainer.new()
 	datos.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	fila.add_child(datos)

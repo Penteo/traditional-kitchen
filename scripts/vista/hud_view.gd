@@ -186,6 +186,7 @@ func _tarjeta(pedido: Pedido) -> PanelContainer:
 	tarjeta.add_child(caja)
 	caja.add_child(_etiqueta("#%d %s" % [pedido.numero, pedido.receta.nombre], 24, HORIZONTAL_ALIGNMENT_LEFT))
 	caja.add_child(_etiqueta(_componentes(pedido.receta), 18, HORIZONTAL_ALIGNMENT_LEFT, COLOR_TEXTO_SUAVE))
+	caja.add_child(_iconos_receta(pedido.receta, 40.0))
 	var barra := Control.new()
 	barra.custom_minimum_size = Vector2(ANCHO_BARRA_PEDIDO, ALTO_BARRA_PEDIDO)
 	var fondo := ColorRect.new()
