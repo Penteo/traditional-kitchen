@@ -22,6 +22,7 @@ var animacion: Animacion = Animacion.REPOSO
 
 var _chef: Chef = null
 var _sprite: AnimatedSprite2D = null
+var _polvo: CPUParticles2D = null
 var _tiempo: float = 0.0
 var _parpadeo: float = 0.0
 var _direccion_dibujada: Chef.Direccion = Chef.Direccion.ABAJO
@@ -101,6 +102,7 @@ func _crear_sprite() -> void:
 					push_warning("ChefView: falta %s, se usa el dibujo provisional." % ruta)
 					return
 				frames.add_frame(nombre, load(ruta) as Texture2D)
+	_crear_polvo()
 	_sprite = AnimatedSprite2D.new()
 	_sprite.sprite_frames = frames
 	_sprite.scale = Vector2(ESCALA_SPRITE, ESCALA_SPRITE)
@@ -131,6 +133,27 @@ func _actualizar_sprite() -> void:
 	# Accion invalida: el chef sacude la cabeza de lado a lado.
 	var temblor := sin(_tiempo * 60.0) * 3.0 if _parpadeo > 0.0 else 0.0
 	_sprite.position = POSICION_SPRITE + Vector2(temblor, 0.0)
+	_polvo.emitting = _se_mueve()
+
+
+## Polvo bajo los pies mientras el chef camina.
+func _crear_polvo() -> void:
+	_polvo = CPUParticles2D.new()
+	_polvo.position = Vector2(0.0, 30.0)
+	_polvo.show_behind_parent = true
+	_polvo.texture = EfectosVisuales.textura("particula.png")
+	_polvo.emitting = false
+	_polvo.amount = 10
+	_polvo.lifetime = 0.45
+	_polvo.direction = Vector2(0.0, -1.0)
+	_polvo.spread = 70.0
+	_polvo.gravity = Vector2.ZERO
+	_polvo.initial_velocity_min = 10.0
+	_polvo.initial_velocity_max = 30.0
+	_polvo.scale_amount_min = 0.12
+	_polvo.scale_amount_max = 0.3
+	_polvo.color = Color(0.82, 0.7, 0.52, 0.55)
+	add_child(_polvo)
 
 
 func _vista_actual() -> String:

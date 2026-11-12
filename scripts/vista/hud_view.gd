@@ -134,6 +134,9 @@ func _mostrar_reloj(restante: float) -> void:
 
 func _al_cambiar_cuenta(valor: int) -> void:
 	_cuenta.text = str(valor)
+	_cuenta.pivot_offset = _cuenta.size / 2.0
+	_cuenta.scale = Vector2(1.5, 1.5)
+	create_tween().tween_property(_cuenta, "scale", Vector2.ONE, 0.35).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 
 
 func _al_cambiar_estado(estado: GameSession.Estado) -> void:
@@ -197,7 +200,7 @@ func _tarjeta(pedido: Pedido) -> PanelContainer:
 	relleno.size = Vector2(ANCHO_BARRA_PEDIDO, ALTO_BARRA_PEDIDO)
 	barra.add_child(relleno)
 	caja.add_child(barra)
-	_barras_pedido.append({"pedido": pedido, "relleno": relleno})
+	_barras_pedido.append({"pedido": pedido, "relleno": relleno, "tarjeta": tarjeta})
 	if not _numeros_vistos.has(pedido.numero):
 		_numeros_vistos.append(pedido.numero)
 		_animar_entrada(tarjeta)
@@ -232,12 +235,24 @@ func _refrescar_barras() -> void:
 		var relleno: ColorRect = entrada["relleno"]
 		var fraccion := clampf(pedido.fraccion_restante(), 0.0, 1.0)
 		relleno.size = Vector2(ANCHO_BARRA_PEDIDO * fraccion, ALTO_BARRA_PEDIDO)
+		var urgencia := 0.0
 		if fraccion > 0.5:
 			relleno.color = COLOR_VERDE
 		elif fraccion >= 0.25:
 			relleno.color = COLOR_AMBAR
 		else:
 			relleno.color = COLOR_ROJO
+			urgencia = 0.5 + 0.5 * sin(Time.get_ticks_msec() / 110.0)
+		# Pedido por vencer: la tarjeta parpadea en rojo suave.
+		var tarjeta := entrada["tarjeta"] as Control
+		if tarjeta != null:
+			var tono := 1.0 - 0.3 * urgencia
+			tarjeta.modulate = Color(1.0, tono, tono, tarjeta.modulate.a)
+
+
+func _process(_delta: float) -> void:
+	if not _barras_pedido.is_empty():
+		_refrescar_barras()
 
 
 func _actualizar_chefs() -> void:

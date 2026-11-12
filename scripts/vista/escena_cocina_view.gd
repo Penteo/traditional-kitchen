@@ -27,6 +27,7 @@ var _pausa: PausaView = null
 var _opciones: Pantalla = null
 var _resultados: ResultadosView = null
 var _sesion: GameSession = null
+var _efectos: EfectosVisuales = null
 
 
 ## MenuController entrega el nivel antes de anadir la escena al arbol.
@@ -84,6 +85,9 @@ func _construir_partida() -> void:
 	_sesion.estado_cambiado.connect(_actualizar_controles)
 	_sesion.pausa_cambiada.connect(_actualizar_controles)
 	_conectar_audio(estaciones)
+	_efectos = EfectosVisuales.new()
+	add_child(_efectos)
+	_efectos.vincular(_sesion, estaciones)
 	_actualizar_controles(null)
 
 
@@ -92,6 +96,7 @@ func _limpiar() -> void:
 		_quitar(chef)
 	_chefs.clear()
 	_quitar(_controlador)
+	_quitar(_efectos)
 	_quitar(_nivel_escena)
 	_quitar(_hud)
 	_quitar(_pausa)
@@ -99,6 +104,7 @@ func _limpiar() -> void:
 	_quitar(_resultados)
 	_controlador = null
 	_nivel_escena = null
+	_efectos = null
 	_hud = null
 	_pausa = null
 	_opciones = null

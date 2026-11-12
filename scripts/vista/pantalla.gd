@@ -13,6 +13,11 @@ func _ready() -> void:
 	theme = TemaUI.obtener()
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_construir()
+	# Entrada con fundido (tambien durante la pausa del juego).
+	modulate.a = 0.0
+	var entrada := create_tween()
+	entrada.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+	entrada.tween_property(self, "modulate:a", 1.0, 0.25)
 
 
 ## Cada pantalla concreta arma aqui sus controles.
