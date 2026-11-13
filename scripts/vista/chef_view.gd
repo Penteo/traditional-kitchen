@@ -42,7 +42,7 @@ func _process(delta: float) -> void:
 		animacion = nueva
 		animacion_cambiada.emit(nueva)
 		queue_redraw()
-	if _se_mueve() or _parpadeo > 0.0:
+	if _se_mueve() or _parpadeo > 0.0 or _chef.esta_cortando():
 		_tiempo += delta
 		queue_redraw()
 	if _parpadeo > 0.0:
@@ -132,7 +132,11 @@ func _actualizar_sprite() -> void:
 	_sprite.speed_scale = 0.35 if quieto_cargando else 1.0
 	# Accion invalida: el chef sacude la cabeza de lado a lado.
 	var temblor := sin(_tiempo * 60.0) * 3.0 if _parpadeo > 0.0 else 0.0
-	_sprite.position = POSICION_SPRITE + Vector2(temblor, 0.0)
+	var golpe := _golpe()
+	var inclinacion := -1.0 if _chef.direccion == Chef.Direccion.IZQUIERDA else 1.0
+	_sprite.position = POSICION_SPRITE + Vector2(temblor, golpe * 5.0)
+	_sprite.rotation = golpe * 0.1 * inclinacion
+	_sprite.scale = Vector2(ESCALA_SPRITE, ESCALA_SPRITE * (1.0 - 0.08 * golpe))
 	_polvo.emitting = _se_mueve()
 
 
@@ -173,7 +177,28 @@ func _draw() -> void:
 	var radio := _chef.parametros.radio_colision
 	if _sprite == null:
 		_dibujar_provisional(radio)
+	_dibujar_cuchillo(radio)
 	_dibujar_item(radio)
+
+
+## Intensidad del golpe de corte (0 a 1). Vale 0 si el chef no esta cortando.
+func _golpe() -> float:
+	if not _chef.esta_cortando():
+		return 0.0
+	return maxf(0.0, sin(_tiempo * 22.0))
+
+
+## Cuchillo que sube y baja delante del chef mientras corta.
+func _dibujar_cuchillo(radio: float) -> void:
+	if not _chef.esta_cortando():
+		return
+	var golpe := _golpe()
+	var elevacion := 1.0 - golpe
+	var posicion := _chef.vector_direccion() * (radio + 8.0) + Vector2(0.0, -6.0 - elevacion * 14.0)
+	draw_set_transform(posicion, -0.3 * elevacion)
+	draw_colored_polygon(PackedVector2Array([Vector2(-5.0, -18.0), Vector2(5.0, -18.0), Vector2(5.0, 14.0), Vector2(-5.0, 20.0)]), Color(0.85, 0.88, 0.92))
+	draw_rect(Rect2(-4.0, -36.0, 8.0, 18.0), Color(0.4, 0.25, 0.15))
+	draw_set_transform(Vector2.ZERO, 0.0)
 
 
 ## Dibujo provisional (circulo con raya de direccion), solo si no hay arte.

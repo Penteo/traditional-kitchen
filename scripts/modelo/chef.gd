@@ -14,6 +14,8 @@ enum Direccion { ARRIBA, ABAJO, IZQUIERDA, DERECHA }
 
 var direccion: Direccion = Direccion.ABAJO
 var item_en_mano: Item = null
+## Tabla en la que este chef esta cortando ahora mismo (null si no corta).
+var tabla_cortando: TablaCortar = null
 
 @onready var _zona: Area2D = $ZonaInteraccion
 
@@ -29,6 +31,9 @@ func _ready() -> void:
 
 
 func mover(vector: Vector2) -> void:
+	if esta_cortando():
+		velocity = Vector2.ZERO
+		return
 	velocity = vector * parametros.velocidad
 	move_and_slide()
 	if vector != Vector2.ZERO:
@@ -41,6 +46,13 @@ func mover(vector: Vector2) -> void:
 ## Se queda quieto (pausa, cuenta atras y resultados).
 func detener() -> void:
 	velocity = Vector2.ZERO
+
+
+## Cortando: no se mueve hasta que la tabla termine o alguien retire el ingrediente.
+func esta_cortando() -> bool:
+	if tabla_cortando != null and not tabla_cortando.cortando:
+		tabla_cortando = null
+	return tabla_cortando != null
 
 
 func sostiene_item() -> bool:

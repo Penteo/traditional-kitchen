@@ -54,7 +54,11 @@ func resolver_acciones(pedidos: Array[Dictionary]) -> void:
 				if not interactuar(chef, estacion):
 					_avisar_invalida(chef)
 			Accion.PROCESAR:
+				var tabla := estacion as TablaCortar
+				var ya_cortaba := tabla != null and tabla.cortando
 				estacion.procesar()
+				if tabla != null and tabla.cortando and not ya_cortaba:
+					chef.tabla_cortando = tabla
 
 
 ## Tabla 14: depositar en estacion compatible, retirar o recoger de un surtidor. Lo incompatible no tiene efecto.
