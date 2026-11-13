@@ -6,7 +6,7 @@ Proyecto académico, Electiva Profesional II: Videojuegos, UDI.
 Integrantes: Yeison Suárez Suárez, Juan David Sepúlveda Rojas, Eber Arley Arias Osorio.
 
 ## Requisitos
-- Godot: versión 4.7.1 (ESCRIBIR AQUÍ LA VERSIÓN EXACTA)
+- Godot: versión 4.7.1 estable (build 4.7.1.stable.official.a13da4feb, con la que se verificó que el proyecto importa y las pruebas pasan)
 - Git y Git LFS
 
 ## Cómo abrir el proyecto
@@ -20,4 +20,7 @@ Pulsar F5 (la escena principal es scenes/main/main.tscn).
 Project > Export > Windows Desktop, salida en la carpeta builds/.
 
 ## Documentación
-El GDD está en la carpeta docs/.
+En la carpeta docs/ están el seguimiento de requisitos (verificacion_requisitos.md), las fuentes del Códice (fuentes_codice.md) y el registro de activos (registro_activos.md). El archivo del GDD debe agregarse a esta carpeta antes de la entrega.
+
+## Pruebas
+Abrir tests/pruebas_sistemas.gd en el editor de Godot y usar Archivo > Ejecutar (Ctrl+Mayús+X); el resultado sale en la pestaña Salida.

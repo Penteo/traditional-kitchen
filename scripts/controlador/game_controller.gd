@@ -8,8 +8,12 @@ var sesion: GameSession = null
 var progreso: ProgresoJugador = null
 var codice: Codice = null
 
+## Segundos de espera tras mover un volumen antes de guardar (agrupa las escrituras al arrastrar).
+const ESPERA_GUARDADO_VOLUMEN: float = 0.5
+
 var _nivel_actual: Nivel = null
 var _estaciones: Array[Estacion] = []
+var _guardado_pendiente: bool = false
 
 
 ## Carga el progreso y el Codice la primera vez que se necesitan (para entonces ya existen todos los autoloads).
@@ -89,14 +93,34 @@ func ajustar_volumen_musica(valor: float) -> void:
 	asegurar_inicializado()
 	progreso.volumen_musica = clampf(valor, 0.0, 1.0)
 	AudioController.ajustar_volumen("Musica", progreso.volumen_musica)
-	PersistenciaController.guardar(progreso)
+	_guardar_volumen_pronto()
 
 
 func ajustar_volumen_sfx(valor: float) -> void:
 	asegurar_inicializado()
 	progreso.volumen_sfx = clampf(valor, 0.0, 1.0)
 	AudioController.ajustar_volumen("SFX", progreso.volumen_sfx)
-	PersistenciaController.guardar(progreso)
+	_guardar_volumen_pronto()
+
+
+## Agrupa los cambios de volumen en una sola escritura; tambien se guarda al cerrar el juego.
+func _guardar_volumen_pronto() -> void:
+	if _guardado_pendiente:
+		return
+	_guardado_pendiente = true
+	get_tree().create_timer(ESPERA_GUARDADO_VOLUMEN).timeout.connect(_guardar_volumen_ahora)
+
+
+func _guardar_volumen_ahora() -> void:
+	if not _guardado_pendiente:
+		return
+	_guardado_pendiente = false
+	if progreso != null:
+		PersistenciaController.guardar(progreso)
+
+
+func _exit_tree() -> void:
+	_guardar_volumen_ahora()
 
 
 ## Primera entrega aceptada de una receta: desbloquea su entrada (queda pendiente hasta terminar el nivel).

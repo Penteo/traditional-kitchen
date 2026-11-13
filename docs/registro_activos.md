@@ -1,4 +1,4 @@
 # Registro de activos (Anexo A)
 
-| Nombre | Autor | URL de origen | Licencia | Fecha de descarga | Atribución exigida | Responsable de verificación |
+| Nombre | Autor | URL de origen | Licencia | Fecha de descarga | AtribuciÃ³n exigida | Responsable de verificaciÃ³n |
 |---|---|---|---|---|---|---|
