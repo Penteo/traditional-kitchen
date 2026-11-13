@@ -30,6 +30,7 @@ func _ready() -> void:
 	_reproductor_musica = AudioStreamPlayer.new()
 	_reproductor_musica.bus = BUS_MUSICA
 	add_child(_reproductor_musica)
+	EventBus.sfx_solicitado.connect(reproducir_sfx)
 
 
 func reproducir_sfx(id: String) -> void:

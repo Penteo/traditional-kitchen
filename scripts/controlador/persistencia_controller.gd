@@ -14,7 +14,10 @@ func cargar() -> ProgresoJugador:
 	if archivo == null:
 		return progreso
 	var json := JSON.new()
-	if json.parse(archivo.get_as_text()) != OK:
+	var texto := archivo.get_as_text()
+	archivo.close()
+	if json.parse(texto) != OK:
+		_respaldar_corrupto()
 		return progreso
 	var datos: Variant = json.data
 	if datos is Dictionary:
@@ -30,7 +33,10 @@ func guardar(progreso: ProgresoJugador) -> bool:
 		if DirAccess.rename_absolute(RUTA_TEMPORAL, RUTA_ARCHIVO) == OK:
 			return true
 		DirAccess.remove_absolute(RUTA_TEMPORAL)
-	return _escribir(RUTA_ARCHIVO, texto)
+	var guardado := _escribir(RUTA_ARCHIVO, texto)
+	if not guardado:
+		push_warning("No se pudo guardar el progreso en " + RUTA_ARCHIVO)
+	return guardado
 
 
 func _escribir(ruta: String, texto: String) -> bool:
@@ -40,3 +46,9 @@ func _escribir(ruta: String, texto: String) -> bool:
 	archivo.store_string(texto)
 	archivo.close()
 	return true
+
+
+## Conserva una copia del archivo danado para no perderlo cuando se guarde un progreso nuevo encima.
+func _respaldar_corrupto() -> void:
+	push_warning("progreso.json danado: se conserva una copia en " + RUTA_ARCHIVO + ".corrupto")
+	DirAccess.copy_absolute(RUTA_ARCHIVO, RUTA_ARCHIVO + ".corrupto")

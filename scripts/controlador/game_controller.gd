@@ -47,11 +47,13 @@ func iniciar_partida(nivel: Nivel, estaciones: Array[Estacion], con_ficha: bool 
 	codice.descartar_pendientes()
 	_nivel_actual = nivel
 	_estaciones = estaciones
+	_desconectar_sesion()
 	sesion = GameSession.new()
 	sesion.receta_entregada.connect(_al_entregar_receta)
 	sesion.partida_terminada.connect(_al_terminar)
 	sesion.iniciar(nivel, estaciones, con_ficha)
 	partida_iniciada.emit(nivel)
+	EventBus.partida_iniciada.emit(nivel)
 	return sesion
 
 
@@ -125,6 +127,7 @@ func _exit_tree() -> void:
 
 ## Primera entrega aceptada de una receta: desbloquea su entrada (queda pendiente hasta terminar el nivel).
 func _al_entregar_receta(receta: Receta) -> void:
+	EventBus.receta_entregada.emit(receta)
 	var entrada := codice.desbloquear(receta)
 	if entrada != null:
 		sesion.resultado.entradas_nuevas.append(entrada)
@@ -138,6 +141,7 @@ func _al_terminar(resultado: ResultadoPartida) -> void:
 	resultado.dato_curioso = _dato_curioso(resultado)
 	PersistenciaController.guardar(progreso)
 	partida_terminada.emit(resultado)
+	EventBus.partida_terminada.emit(resultado)
 
 
 ## Si no hay entrada nueva, se muestra el dato curioso del plato mas entregado.
@@ -148,3 +152,13 @@ func _dato_curioso(resultado: ResultadoPartida) -> String:
 	if entrada == null:
 		return ""
 	return entrada.dato_curioso
+
+
+## Evita que una sesion anterior siga conectada si se reinicia el nivel.
+func _desconectar_sesion() -> void:
+	if sesion == null:
+		return
+	if sesion.receta_entregada.is_connected(_al_entregar_receta):
+		sesion.receta_entregada.disconnect(_al_entregar_receta)
+	if sesion.partida_terminada.is_connected(_al_terminar):
+		sesion.partida_terminada.disconnect(_al_terminar)
