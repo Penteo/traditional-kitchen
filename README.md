@@ -19,6 +19,22 @@ Pulsar F5 (la escena principal es scenes/main/main.tscn).
 ## Cómo exportar
 Project > Export > Windows Desktop, salida en la carpeta builds/.
 
+## Cómo jugar
+Objetivo: preparar y entregar los pedidos antes de que se acabe el tiempo. Si se alcanza la cuota de puntos del nivel, se asegura la permanencia en la universidad. Se juega entre dos personas en el mismo teclado.
+
+| Acción      | Jugador 1 (azul) | Jugador 2 (rojo)                                           |
+| ----------- | ---------------- | ---------------------------------------------------------- |
+| Moverse     | W, A, S, D       | Flechas                                                    |
+| Interactuar | F                | `.` (punto)                                                |
+| Procesar    | G                | `/` (en un teclado latinoamericano esa tecla muestra `-`)  |
+
+- Interactuar: recoger, depositar, retirar y entregar.
+- Procesar: cortar en la tabla.
+- Pausa: Esc o P.
+
+## Descargar el juego
+Para jugar sin instalar Godot, descargar `Traditional Kitchen.exe` desde la página de [Releases](https://github.com/Penteo/traditional-kitchen/releases/tag/v0.1.0) (Windows).
+
 ## Documentación
 En la carpeta docs/ están el seguimiento de requisitos (verificacion_requisitos.md), las fuentes del Códice (fuentes_codice.md) y el registro de activos (registro_activos.md). El archivo del GDD debe agregarse a esta carpeta antes de la entrega.
 
