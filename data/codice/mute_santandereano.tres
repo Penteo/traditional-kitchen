@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="EntradaCodice" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/modelo/recursos/entrada_codice.gd" id="1"]
+[ext_resource type="Resource" path="res://data/recetas/mute_santandereano.tres" id="2"]
+
+[resource]
+script = ExtResource("1")
+id = "mute_santandereano"
+receta = ExtResource("2")
+nombre = "Mute santandereano"
+origen = "Sopa tradicional de Santander."
+ingredientes = "Maíz, carnes, papa y garbanzo."
+en_el_juego = "Solo papa y carne cocidas en olla."
+dato_curioso = "Tradicionalmente tarda horas en cocinarse; aquí, solo 25 segundos."
+fuente = ""
+verificada = false

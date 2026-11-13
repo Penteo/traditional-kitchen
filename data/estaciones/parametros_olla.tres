@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="ParametrosCoccion" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/modelo/recursos/parametros_coccion.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+tiempo_coccion = 25.0
+ventana_quemado = 10.0
+aviso_antes_de_quemarse = 3.0

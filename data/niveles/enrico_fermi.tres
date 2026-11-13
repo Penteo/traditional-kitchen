@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="Nivel" load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/modelo/recursos/nivel.gd" id="1"]
+[ext_resource type="Resource" path="res://data/recetas/arepa_con_queso.tres" id="2"]
+[ext_resource type="Resource" path="res://data/recetas/empanadas.tres" id="3"]
+
+[resource]
+script = ExtResource("1")
+numero = 1
+nombre = "Enrico Fermi"
+duracion = 180.0
+cuota = 250
+intervalo_pedidos = 25.0
+cupo_pedidos = 3
+primer_pedido = 5.0
+ventana_sin_pedidos = 30.0
+frase_antagonista = "Arepas y empanadas, estudiantes. Si no llegan a la cuota, mi firma les cancela la matrícula. ¡Cocinen!"
+secuencia_pedidos = [ExtResource("2"), ExtResource("3"), ExtResource("2"), ExtResource("3"), ExtResource("2"), ExtResource("3")]

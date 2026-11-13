@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="EntradaCodice" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/modelo/recursos/entrada_codice.gd" id="1"]
+[ext_resource type="Resource" path="res://data/recetas/empanadas.tres" id="2"]
+
+[resource]
+script = ExtResource("1")
+id = "empanadas"
+receta = ExtResource("2")
+nombre = "Empanadas"
+origen = "Plato típico de Colombia."
+ingredientes = "Masa de maíz rellena de papa y carne."
+en_el_juego = "Empanada cruda frita en freidora; sin relleno modelado."
+dato_curioso = "Se acompañan con ají."
+fuente = ""
+verificada = false

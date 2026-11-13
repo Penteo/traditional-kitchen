@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="ParametrosChef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/modelo/recursos/parametros_chef.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+velocidad = 360.0
+radio_colision = 40.0
+alcance_interaccion = 70.0
+radio_zona_interaccion = 30.0

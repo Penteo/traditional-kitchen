@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="ParametrosTabla" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/modelo/recursos/parametros_tabla.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+tiempo_queso = 2.0
+tiempo_papa = 3.0
+tiempo_carne = 5.0

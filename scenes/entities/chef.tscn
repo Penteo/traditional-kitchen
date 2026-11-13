@@ -1,0 +1,30 @@
+[gd_scene format=3 uid="uid://c3l3pvvut58mu"]
+
+[ext_resource type="Script" uid="uid://bafwj148wl27d" path="res://scripts/modelo/chef.gd" id="1"]
+[ext_resource type="Resource" path="res://data/parametros_chef.tres" id="2"]
+[ext_resource type="Script" uid="uid://dpotxraxuwxdn" path="res://scripts/vista/chef_view.gd" id="3"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_chef"]
+radius = 40.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_zona"]
+radius = 30.0
+
+[node name="Chef" type="CharacterBody2D" unique_id=1115944087]
+collision_mask = 7
+motion_mode = 1
+script = ExtResource("1")
+parametros = ExtResource("2")
+
+[node name="Vista" type="Node2D" parent="." unique_id=1862998434]
+script = ExtResource("3")
+
+[node name="Colision" type="CollisionShape2D" parent="." unique_id=40454371]
+shape = SubResource("CircleShape2D_chef")
+
+[node name="ZonaInteraccion" type="Area2D" parent="." unique_id=1865406223]
+collision_layer = 0
+collision_mask = 2
+
+[node name="Colision" type="CollisionShape2D" parent="ZonaInteraccion" unique_id=2138387854]
+shape = SubResource("CircleShape2D_zona")

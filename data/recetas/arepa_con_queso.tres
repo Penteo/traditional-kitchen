@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="Receta" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/modelo/recursos/receta.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+nombre = "Arepa con queso"
+region = "Colombia"
+componentes = PackedInt32Array(0, 1)
+estados_componentes = PackedInt32Array(2, 1)
+unidades_por_pedido = 1
+valor_base = 50
+limite_tiempo = 60.0
+simplificacion = "Masa asada en plancha y queso cortado"

@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/modelo/estaciones/cesto_basura.gd" id="1"]
+
+[sub_resource type="RectangleShape2D" id="Rect_estacion"]
+size = Vector2(120, 120)
+
+[node name="CestoBasura" type="StaticBody2D"]
+collision_layer = 2
+script = ExtResource("1")
+
+[node name="Colision" type="CollisionShape2D" parent="."]
+shape = SubResource("Rect_estacion")

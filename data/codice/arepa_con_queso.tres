@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="EntradaCodice" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/modelo/recursos/entrada_codice.gd" id="1"]
+[ext_resource type="Resource" path="res://data/recetas/arepa_con_queso.tres" id="2"]
+
+[resource]
+script = ExtResource("1")
+id = "arepa_con_queso"
+receta = ExtResource("2")
+nombre = "Arepa con queso"
+origen = "Plato típico de Colombia."
+ingredientes = "Masa de maíz y queso."
+en_el_juego = "Masa asada en plancha y queso cortado."
+dato_curioso = "Hay arepas de choclo, de huevo y boyacenses."
+fuente = ""
+verificada = false
