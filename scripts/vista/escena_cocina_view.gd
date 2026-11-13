@@ -183,6 +183,7 @@ func _mostrar_resultados(resultado: ResultadoPartida) -> void:
 	_resultados.preparar({"resultado": resultado})
 	_resultados.reintentar_solicitado.connect(_construir_partida)
 	_resultados.continuar_solicitado.connect(func() -> void: continuar_solicitado.emit())
+	_resultados.menu_solicitado.connect(_salir)
 	_capa_ui.add_child(_resultados)
 
 
