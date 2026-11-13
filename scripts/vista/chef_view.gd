@@ -196,8 +196,6 @@ func _dibujar_item(radio: float) -> void:
 	var altura := ALTURA_ICONO if _sprite != null else 24.0
 	var posicion := Vector2(0.0, -radio - altura)
 	if _sprite != null:
-		draw_circle(posicion, 38.0, Color(1.0, 1.0, 1.0, 0.92))
-		draw_arc(posicion, 38.0, 0.0, TAU, 40, Color(0.23, 0.14, 0.09), 3.0, true)
 		if IconoItem.dibujar(self, item, posicion, 68.0):
 			return
 	draw_circle(posicion, 16.0, item.color())

@@ -124,8 +124,6 @@ func _draw() -> void:
 	for i in items.size():
 		var posicion := Vector2((i - (items.size() - 1) / 2.0) * paso, -10.0)
 		if _textura != null:
-			draw_circle(posicion, 30.0, Color(1.0, 1.0, 1.0, 0.85))
-			draw_arc(posicion, 30.0, 0.0, TAU, 32, Color(0.23, 0.14, 0.09), 2.5, true)
 			if IconoItem.dibujar(self, items[i], posicion, 56.0):
 				continue
 			todo_con_arte = false
