@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3]
+[gd_scene load_steps=13 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/entities/estaciones/surtidor.tscn" id="1"]
 [ext_resource type="PackedScene" path="res://scenes/entities/estaciones/cesto_basura.tscn" id="2"]
@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" path="res://scenes/entities/estaciones/dispensador_platos.tscn" id="6"]
 [ext_resource type="PackedScene" path="res://scenes/entities/estaciones/tabla_cortar.tscn" id="7"]
 [ext_resource type="PackedScene" path="res://scenes/entities/estaciones/olla.tscn" id="8"]
+[ext_resource type="PackedScene" path="res://scenes/entities/estaciones/meson.tscn" id="9"]
 
 [sub_resource type="RectangleShape2D" id="Forma_1280x40"]
 size = Vector2(1280, 40)
@@ -91,6 +92,57 @@ offset_right = 60.0
 offset_bottom = 60.0
 mouse_filter = 2
 color = Color(0.6, 0.3, 0.15, 1)
+
+[node name="Meson_0_0" parent="." instance=ExtResource("9")]
+position = Vector2(420, 180)
+
+[node name="Meson_4_0" parent="." instance=ExtResource("9")]
+position = Vector2(900, 180)
+
+[node name="Meson_5_0" parent="." instance=ExtResource("9")]
+position = Vector2(1020, 180)
+
+[node name="Meson_8_0" parent="." instance=ExtResource("9")]
+position = Vector2(1380, 180)
+
+[node name="Meson_0_1" parent="." instance=ExtResource("9")]
+position = Vector2(420, 300)
+
+[node name="Meson_0_5" parent="." instance=ExtResource("9")]
+position = Vector2(420, 780)
+
+[node name="Meson_9_1" parent="." instance=ExtResource("9")]
+position = Vector2(1500, 300)
+
+[node name="Meson_9_3" parent="." instance=ExtResource("9")]
+position = Vector2(1500, 540)
+
+[node name="Meson_9_5" parent="." instance=ExtResource("9")]
+position = Vector2(1500, 780)
+
+[node name="Meson_0_6" parent="." instance=ExtResource("9")]
+position = Vector2(420, 900)
+
+[node name="Meson_1_6" parent="." instance=ExtResource("9")]
+position = Vector2(540, 900)
+
+[node name="Meson_2_6" parent="." instance=ExtResource("9")]
+position = Vector2(660, 900)
+
+[node name="Meson_3_6" parent="." instance=ExtResource("9")]
+position = Vector2(780, 900)
+
+[node name="Meson_6_6" parent="." instance=ExtResource("9")]
+position = Vector2(1140, 900)
+
+[node name="Meson_7_6" parent="." instance=ExtResource("9")]
+position = Vector2(1260, 900)
+
+[node name="Meson_8_6" parent="." instance=ExtResource("9")]
+position = Vector2(1380, 900)
+
+[node name="Meson_9_6" parent="." instance=ExtResource("9")]
+position = Vector2(1500, 900)
 
 [node name="SurtidorMasa" parent="." instance=ExtResource("1")]
 position = Vector2(540, 180)

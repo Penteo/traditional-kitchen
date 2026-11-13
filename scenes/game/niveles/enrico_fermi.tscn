@@ -77,45 +77,6 @@ offset_bottom = 120.0
 mouse_filter = 2
 color = Color(0.3, 0.4, 0.62, 1)
 
-[node name="SurtidorMasa" parent="." instance=ExtResource("1")]
-position = Vector2(660, 240)
-tipo = 0
-
-[node name="SurtidorQueso" parent="." instance=ExtResource("1")]
-position = Vector2(780, 240)
-tipo = 1
-
-[node name="SurtidorEmpanada" parent="." instance=ExtResource("1")]
-position = Vector2(900, 240)
-tipo = 2
-
-[node name="Cesto" parent="." instance=ExtResource("2")]
-position = Vector2(1380, 240)
-
-[node name="Plancha" parent="." instance=ExtResource("3")]
-position = Vector2(540, 480)
-
-[node name="Freidora1" parent="." instance=ExtResource("4")]
-position = Vector2(540, 600)
-
-[node name="Freidora2" parent="." instance=ExtResource("4")]
-position = Vector2(540, 720)
-
-[node name="Barra" parent="." instance=ExtResource("5")]
-position = Vector2(1380, 480)
-
-[node name="Dispensador" parent="." instance=ExtResource("6")]
-position = Vector2(1380, 720)
-
-[node name="TablaCortar" parent="." instance=ExtResource("7")]
-position = Vector2(900, 840)
-
-[node name="SpawnJ1" type="Marker2D" parent="."]
-position = Vector2(660, 360)
-
-[node name="SpawnJ2" type="Marker2D" parent="."]
-position = Vector2(1260, 720)
-
 [node name="Meson_0_0" parent="." instance=ExtResource("8")]
 position = Vector2(540, 240)
 
@@ -157,3 +118,42 @@ position = Vector2(1260, 840)
 
 [node name="Meson_7_5" parent="." instance=ExtResource("8")]
 position = Vector2(1380, 840)
+
+[node name="SurtidorMasa" parent="." instance=ExtResource("1")]
+position = Vector2(660, 240)
+tipo = 0
+
+[node name="SurtidorQueso" parent="." instance=ExtResource("1")]
+position = Vector2(780, 240)
+tipo = 1
+
+[node name="SurtidorEmpanada" parent="." instance=ExtResource("1")]
+position = Vector2(900, 240)
+tipo = 2
+
+[node name="Cesto" parent="." instance=ExtResource("2")]
+position = Vector2(1380, 240)
+
+[node name="Plancha" parent="." instance=ExtResource("3")]
+position = Vector2(540, 480)
+
+[node name="Freidora1" parent="." instance=ExtResource("4")]
+position = Vector2(540, 600)
+
+[node name="Freidora2" parent="." instance=ExtResource("4")]
+position = Vector2(540, 720)
+
+[node name="Barra" parent="." instance=ExtResource("5")]
+position = Vector2(1380, 480)
+
+[node name="Dispensador" parent="." instance=ExtResource("6")]
+position = Vector2(1380, 720)
+
+[node name="TablaCortar" parent="." instance=ExtResource("7")]
+position = Vector2(900, 840)
+
+[node name="SpawnJ1" type="Marker2D" parent="."]
+position = Vector2(660, 360)
+
+[node name="SpawnJ2" type="Marker2D" parent="."]
+position = Vector2(1260, 720)
