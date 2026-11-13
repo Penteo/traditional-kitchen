@@ -1,6 +1,6 @@
 class_name BarraEntrega
 extends Estacion
-## Barra de entrega: solo recibe platos armados. No decide nada: avisa con una senal.
+## Barra de entrega: solo recibe platos. No decide nada: avisa con una senal.
 
 signal plato_entregado(plato: Plato)
 
@@ -19,9 +19,11 @@ func puede_entregar() -> bool:
 	return false
 
 
+## Tras avisar, el plato sale de juego y libera su cupo en el dispensador.
 func recibir(item: Item) -> bool:
 	var plato := item as Plato
 	if plato == null:
 		return false
 	plato_entregado.emit(plato)
+	plato.consumir()
 	return true

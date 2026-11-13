@@ -1,7 +1,8 @@
 class_name Meson
 extends Estacion
-## Superficie de apoyo (mesa de cocina). Cada celda guarda 1 item cualquiera (R2), pero los
-## mesones contiguos se dibujan como una sola mesa continua. Hereda recibir/retirar de Estacion.
+## Superficie de apoyo (mesa de cocina). Cada celda guarda 1 item (R2), pero los mesones
+## contiguos se dibujan como una sola mesa. Con un plato encima, acepta ingredientes que
+## encajen en alguna receta. Hereda retirar de Estacion.
 
 const TOLERANCIA_VECINO: float = 2.0
 
@@ -26,6 +27,52 @@ func _ready() -> void:
 	_crear_estilos()
 	super()
 
+
+# --- Logica de apoyo y platos ---
+
+func acepta(item: Item) -> bool:
+	if items.is_empty():
+		return true
+	return _se_combinan(items[0], item)
+
+
+func recibir(item: Item) -> bool:
+	if not acepta(item):
+		return false
+	if items.is_empty():
+		items.append(item)
+	else:
+		_combinar(items[0], item)
+	item_cambiado.emit()
+	queue_redraw()
+	return true
+
+
+## Un plato presente recibe un ingrediente; un plato que llega recoge el ingrediente suelto.
+func _se_combinan(presente: Item, nuevo: Item) -> bool:
+	var plato := presente as Plato
+	var ingrediente := nuevo as Ingrediente
+	if plato != null and ingrediente != null:
+		return plato.acepta(ingrediente)
+	plato = nuevo as Plato
+	ingrediente = presente as Ingrediente
+	if plato != null and ingrediente != null:
+		return plato.acepta(ingrediente)
+	return false
+
+
+func _combinar(presente: Item, nuevo: Item) -> void:
+	var plato := presente as Plato
+	if plato != null:
+		plato.agregar(nuevo as Ingrediente)
+		return
+	plato = nuevo as Plato
+	plato.agregar(presente as Ingrediente)
+	items.clear()
+	items.append(plato)
+
+
+# --- Vecinos y estilo ---
 
 ## Marca por que lados hay otro meson pegado (distancia exacta de una celda).
 func _detectar_vecinos() -> void:
@@ -68,6 +115,8 @@ func _aplicar_bordes(estilo: StyleBoxFlat, borde: int, radio: int) -> void:
 	estilo.corner_radius_bottom_left = 0 if (_une_izq or _une_abajo) else radio
 	estilo.corner_radius_bottom_right = 0 if (_une_der or _une_abajo) else radio
 
+
+# --- Dibujo ---
 
 ## Resalte cuando un chef tiene este meson delante (igual que las estaciones con arte).
 func _process(delta: float) -> void:
@@ -112,9 +161,24 @@ func _draw() -> void:
 func _dibujar_items(centro: Vector2, tamano: Vector2) -> void:
 	if items.is_empty():
 		return
-	draw_circle(centro, 30.0, Color(1.0, 1.0, 1.0, 0.85))
-	draw_arc(centro, 30.0, 0.0, TAU, 32, Color(0.23, 0.14, 0.09), 2.5, true)
-	if IconoItem.dibujar(self, items[0], centro, 56.0):
+	var item := items[0]
+	if IconoItem.dibujar(self, item, centro, 56.0):
 		return
-	draw_circle(centro, 16.0, items[0].color())
-	draw_string(ThemeDB.fallback_font, centro + Vector2(-tamano.x / 2.0, 40.0), items[0].etiqueta(), HORIZONTAL_ALIGNMENT_CENTER, tamano.x, 14)
+	var plato := item as Plato
+	if plato != null:
+		_dibujar_plato_provisional(plato, centro)
+		return
+	draw_circle(centro, 16.0, item.color())
+	draw_string(ThemeDB.fallback_font, centro + Vector2(-tamano.x / 2.0, 40.0), item.etiqueta(), HORIZONTAL_ALIGNMENT_CENTER, tamano.x, 14)
+
+
+## Plato sin arte: disco blanco con un punto de color por cada ingrediente (hasta 4).
+func _dibujar_plato_provisional(plato: Plato, centro: Vector2) -> void:
+	draw_circle(centro, 24.0, Color(0.96, 0.96, 0.96))
+	draw_arc(centro, 24.0, 0.0, TAU, 32, Color(0.5, 0.5, 0.55), 2.0, true)
+	var cantidad := mini(plato.componentes.size(), 4)
+	for i in cantidad:
+		var desplazamiento := Vector2.ZERO
+		if cantidad > 1:
+			desplazamiento = Vector2.from_angle(-PI / 2.0 + TAU * i / cantidad) * 10.0
+		draw_circle(centro + desplazamiento, 8.0, plato.componentes[i].color())

@@ -1,93 +1,66 @@
 class_name DispensadorPlatos
 extends Estacion
-## Punto de ensamblaje (R2: excepcion). Acumula los componentes de un solo plato en armado.
+## Entrega platos vacios, con un maximo de platos en juego a la vez (en meson, en mano o en camino).
+## El cupo se libera cuando un plato se entrega en la barra o se tira al cesto.
 
-var recetas: Array[Receta] = []
-var plato_en_armado: Plato = null
+@export var max_platos: int = 3
+
+## Las asigna GameSession al iniciar la partida; reiniciarlas tambien reinicia el conteo.
+var recetas: Array[Receta] = []:
+	set(valor):
+		recetas = valor
+		_en_juego = 0
+		queue_redraw()
+
+var _en_juego: int = 0
 
 
 func _ready() -> void:
 	nombre = "Dispensador"
 	color_placeholder = Color(0.85, 0.85, 0.9)
-	capacidad = 99
 	super()
 
 
-## Solo acepta ingredientes procesados que, sumados al contenido actual, sigan siendo parte de alguna receta.
-func acepta(item: Item) -> bool:
-	var ingrediente := item as Ingrediente
-	if ingrediente == null:
-		return false
-	var tentativo := _contenido_actual()
-	var clave := ingrediente.clave()
-	tentativo[clave] = int(tentativo.get(clave, 0)) + 1
-	for receta in recetas:
-		if receta.admite(tentativo):
-			return true
+func disponibles() -> int:
+	return maxi(0, max_platos - _en_juego)
+
+
+## Los ingredientes se ponen en los platos, no en el dispensador.
+func acepta(_item: Item) -> bool:
 	return false
 
 
-func agregar_ingrediente(ingrediente: Ingrediente) -> bool:
-	if not acepta(ingrediente):
-		return false
-	if plato_en_armado == null:
-		plato_en_armado = Plato.new()
-	plato_en_armado.agregar(ingrediente)
-	_sincronizar()
-	return true
+func recibir(_item: Item) -> bool:
+	return false
 
 
-func recibir(item: Item) -> bool:
-	var ingrediente := item as Ingrediente
-	if ingrediente == null:
-		return false
-	return agregar_ingrediente(ingrediente)
-
-
-## Receta que el plato en armado ya completa, o null si todavia no esta completo.
-func receta_completada() -> Receta:
-	if plato_en_armado == null:
-		return null
-	for receta in recetas:
-		if plato_en_armado.coincide(receta):
-			return receta
-	return null
-
-
-## Solo se puede retirar un plato completo.
 func puede_entregar() -> bool:
-	return receta_completada() != null
+	return _en_juego < max_platos
 
 
 func retirar() -> Item:
-	return retirar_plato()
-
-
-func retirar_plato() -> Plato:
-	if receta_completada() == null:
+	if not puede_entregar():
 		return null
-	var plato := plato_en_armado
-	plato_en_armado = null
-	_sincronizar()
+	var plato := Plato.new()
+	plato.recetas = recetas
+	plato.consumido.connect(_al_consumir_plato, CONNECT_ONE_SHOT)
+	_en_juego += 1
+	item_cambiado.emit()
+	queue_redraw()
 	return plato
 
 
-func _contenido_actual() -> Dictionary:
-	if plato_en_armado == null:
-		return {}
-	return plato_en_armado.contenido()
-
-
-func _sincronizar() -> void:
-	items.clear()
-	if plato_en_armado != null:
-		for componente in plato_en_armado.componentes:
-			items.append(componente)
+func _al_consumir_plato() -> void:
+	_en_juego = maxi(0, _en_juego - 1)
 	item_cambiado.emit()
 	queue_redraw()
 
 
+## Insignia con los platos que todavia se pueden sacar (roja si no queda ninguno).
 func _dibujar_extra(tamano: Vector2) -> void:
-	var completada := receta_completada()
-	if completada != null:
-		draw_string(ThemeDB.fallback_font, Vector2(-tamano.x / 2.0, tamano.y / 2.0 + 20.0), "LISTO: " + completada.nombre, HORIZONTAL_ALIGNMENT_CENTER, tamano.x, 16, Color.GREEN)
+	var cantidad := disponibles()
+	var centro := Vector2(tamano.x / 2.0 - 20.0, -tamano.y / 2.0 + 20.0)
+	var fondo := Color(0.2, 0.55, 0.3) if cantidad > 0 else Color(0.75, 0.2, 0.2)
+	draw_circle(centro, 17.0, fondo)
+	draw_arc(centro, 17.0, 0.0, TAU, 24, Color.WHITE, 2.0, true)
+	draw_string(ThemeDB.fallback_font, centro + Vector2(-17.0, 7.0), str(cantidad), HORIZONTAL_ALIGNMENT_CENTER, 34.0, 20, Color.WHITE)
