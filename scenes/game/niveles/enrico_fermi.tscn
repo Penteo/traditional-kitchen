@@ -86,14 +86,8 @@ position = Vector2(1020, 240)
 [node name="Meson_5_0" parent="." instance=ExtResource("8")]
 position = Vector2(1140, 240)
 
-[node name="Meson_6_0" parent="." instance=ExtResource("8")]
-position = Vector2(1260, 240)
-
 [node name="Meson_0_1" parent="." instance=ExtResource("8")]
 position = Vector2(540, 360)
-
-[node name="Meson_7_1" parent="." instance=ExtResource("8")]
-position = Vector2(1380, 360)
 
 [node name="Meson_7_3" parent="." instance=ExtResource("8")]
 position = Vector2(1380, 600)
