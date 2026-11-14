@@ -31,6 +31,7 @@ func _ready() -> void:
 	_reproductor_musica.bus = BUS_MUSICA
 	add_child(_reproductor_musica)
 	EventBus.sfx_solicitado.connect(reproducir_sfx)
+	_reproductor_musica.finished.connect(_reproductor_musica.play)
 
 
 func reproducir_sfx(id: String) -> void:
