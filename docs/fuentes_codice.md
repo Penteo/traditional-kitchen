@@ -1,4 +1,4 @@
-# Fuentes del Códice (Anexo B)
+# Fuentes del CÃ³dice (Anexo B)
 
-| Afirmación | Fuente |
+| AfirmaciÃ³n | Fuente |
 |---|---|

@@ -6,3 +6,4 @@ builds/*
 !builds/.gdignore
 !builds/.gitkeep
 Thumbs.db
+*.tmp

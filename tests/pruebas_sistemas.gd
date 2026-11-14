@@ -16,6 +16,7 @@ func _run() -> void:
 	_probar_niveles()
 	_probar_puntuacion()
 	_probar_dispensador()
+	_probar_recetas()
 	_probar_estaciones()
 	_probar_pedidos(1, [5.0, 30.0, 55.0, 80.0, 105.0, 130.0])
 	_probar_pedidos(2, [5.0, 25.0, 45.0, 65.0, 85.0, 105.0, 125.0, 145.0, 165.0])
@@ -98,24 +99,60 @@ func _probar_dispensador() -> void:
 	var d := DispensadorPlatos.new()
 	_nodos.append(d)
 	d.recetas = recetas
-	_ok(not d.acepta(_ing(Ingrediente.Tipo.MASA, Ingrediente.Estado.CRUDO)), "Dispensador rechaza ingredientes crudos")
-	_ok(not d.acepta(_ing(Ingrediente.Tipo.MASA, Ingrediente.Estado.QUEMADO)), "Dispensador rechaza ingredientes quemados")
-	_ok(not d.acepta(Item.new()), "Dispensador rechaza lo que no es un ingrediente")
-	d.recibir(_ing(Ingrediente.Tipo.QUESO, Ingrediente.Estado.PICADO))
-	_ok(not d.puede_entregar(), "Arepa: con solo el queso el plato no esta completo")
-	d.recibir(_ing(Ingrediente.Tipo.MASA, Ingrediente.Estado.COCIDO))
-	_ok(d.puede_entregar() and d.receta_completada() == recetas[0], "Arepa: completa sin importar el orden de armado")
-	var plato := d.retirar_plato()
-	_ok(plato != null and plato.coincide(recetas[0]) and d.plato_en_armado == null, "Se retira el plato y el dispensador queda libre")
-	d.recibir(_ing(Ingrediente.Tipo.EMPANADA, Ingrediente.Estado.COCIDO))
-	_ok(not d.puede_entregar(), "Empanadas: con una sola no esta completo")
-	_ok(not d.acepta(_ing(Ingrediente.Tipo.MASA, Ingrediente.Estado.COCIDO)), "Mezcla: no acepta un ingrediente de otra receta")
-	d.recibir(_ing(Ingrediente.Tipo.EMPANADA, Ingrediente.Estado.COCIDO))
-	_ok(d.puede_entregar() and d.receta_completada() == recetas[1], "Empanadas: completo con 2 unidades")
-	_ok(not d.acepta(_ing(Ingrediente.Tipo.EMPANADA, Ingrediente.Estado.COCIDO)), "Empanadas: rechaza una tercera")
-	d.retirar_plato()
-	d.recibir(_ing(Ingrediente.Tipo.MUTE, Ingrediente.Estado.COCIDO))
-	_ok(d.receta_completada() == recetas[2], "Mute: un solo mute cocido completa la receta")
+	_ok(not d.acepta(_ing(Ingrediente.Tipo.MASA, Ingrediente.Estado.COCIDO)) and not d.acepta(Item.new()), "Dispensador: no recibe ítems (los ingredientes se ponen en los platos)")
+	_ok(d.disponibles() == d.max_platos and d.puede_entregar(), "Dispensador: empieza con todos sus platos disponibles")
+	var platos: Array[Plato] = []
+	for i in d.max_platos:
+		platos.append(d.retirar() as Plato)
+	_ok(platos.size() == 3 and platos[0] != platos[1] and platos[0].esta_vacio() and platos[0].recetas == recetas, "Dispensador: entrega platos vacios, cada uno distinto y con las recetas del nivel")
+	_ok(not d.puede_entregar() and d.retirar() == null and d.disponibles() == 0, "Dispensador: con 3 platos en juego no entrega mas")
+	platos[0].consumir()
+	_ok(d.disponibles() == 1 and d.puede_entregar(), "Dispensador: consumir un plato libera un cupo")
+	platos[0].consumir()
+	_ok(d.disponibles() == 1, "Dispensador: consumir dos veces el mismo plato solo libera un cupo")
+	d.recetas = recetas
+	_ok(d.disponibles() == d.max_platos, "Dispensador: reasignar las recetas reinicia el conteo")
+
+	var arepa := d.retirar() as Plato
+	_ok(not arepa.acepta(_ing(Ingrediente.Tipo.MASA, Ingrediente.Estado.CRUDO)) and not arepa.acepta(_ing(Ingrediente.Tipo.QUESO, Ingrediente.Estado.QUEMADO)), "Plato: rechaza ingredientes crudos o quemados")
+	_ok(arepa.acepta(_ing(Ingrediente.Tipo.QUESO, Ingrediente.Estado.PICADO)), "Plato: acepta un ingrediente que encaja en alguna receta")
+	arepa.agregar(_ing(Ingrediente.Tipo.QUESO, Ingrediente.Estado.PICADO))
+	_ok(not arepa.coincide(recetas[0]), "Arepa: con solo el queso el plato no esta completo")
+	_ok(not arepa.acepta(_ing(Ingrediente.Tipo.EMPANADA, Ingrediente.Estado.COCIDO)), "Mezcla: no acepta un ingrediente de otra receta")
+	arepa.agregar(_ing(Ingrediente.Tipo.MASA, Ingrediente.Estado.COCIDO))
+	_ok(arepa.coincide(recetas[0]) and not arepa.coincide(recetas[1]), "Arepa: completa sin importar el orden de armado")
+	_ok(not arepa.acepta(_ing(Ingrediente.Tipo.QUESO, Ingrediente.Estado.PICADO)), "Arepa: rechaza un segundo queso")
+	arepa.consumir()
+
+	var empanadas := d.retirar() as Plato
+	empanadas.agregar(_ing(Ingrediente.Tipo.EMPANADA, Ingrediente.Estado.COCIDO))
+	_ok(not empanadas.coincide(recetas[1]), "Empanadas: con una sola no esta completo")
+	empanadas.agregar(_ing(Ingrediente.Tipo.EMPANADA, Ingrediente.Estado.COCIDO))
+	_ok(empanadas.coincide(recetas[1]), "Empanadas: completo con 2 unidades")
+	_ok(not empanadas.acepta(_ing(Ingrediente.Tipo.EMPANADA, Ingrediente.Estado.COCIDO)), "Empanadas: rechaza una tercera")
+	empanadas.consumir()
+
+	var mute := d.retirar() as Plato
+	mute.agregar(_ing(Ingrediente.Tipo.MUTE, Ingrediente.Estado.COCIDO))
+	_ok(mute.coincide(recetas[2]), "Mute: un solo mute cocido completa la receta")
+
+
+# ---------- Recetas: contenido por nombre (los .tres guardan indices de enum) ----------
+func _probar_recetas() -> void:
+	var arepa := _receta("arepa_con_queso").requeridos()
+	var clave_masa := Ingrediente.hacer_clave(Ingrediente.Tipo.MASA, Ingrediente.Estado.COCIDO)
+	var clave_queso := Ingrediente.hacer_clave(Ingrediente.Tipo.QUESO, Ingrediente.Estado.PICADO)
+	_ok(arepa.size() == 2 and arepa.get(clave_masa) == 1 and arepa.get(clave_queso) == 1, "Receta arepa: masa cocida + queso picado (si falla, cambio el orden de los enums)")
+	var empanadas := _receta("empanadas").requeridos()
+	_ok(empanadas.size() == 1 and empanadas.get(Ingrediente.hacer_clave(Ingrediente.Tipo.EMPANADA, Ingrediente.Estado.COCIDO)) == 2, "Receta empanadas: 2 empanadas cocidas")
+	var mute := _receta("mute_santandereano").requeridos()
+	_ok(mute.size() == 1 and mute.get(Ingrediente.hacer_clave(Ingrediente.Tipo.MUTE, Ingrediente.Estado.COCIDO)) == 1, "Receta mute: 1 mute cocido")
+	var paralelos := true
+	for nombre in ["arepa_con_queso", "empanadas", "mute_santandereano"]:
+		var receta := _receta(nombre)
+		if receta.componentes.size() != receta.estados_componentes.size() or receta.limite_tiempo <= 0.0:
+			paralelos = false
+	_ok(paralelos, "Recetas: componentes y estados tienen igual longitud y limite de tiempo mayor que 0")
 
 
 # ---------- Estaciones: tiempos de la Tabla 15 ----------
@@ -323,7 +360,7 @@ func _probar_sesion() -> void:
 	_avanzar_sesion(s, 2.5)
 	_ok(s.estado == GameSession.Estado.RESULTADOS and s.esta_terminada(), "Fin: la partida termina en 0 s y pasa a resultados")
 	_ok(s.gestor_pedidos.activos.is_empty() and s.puntuacion.puntos == 400 and s.resultado.vencidos == vencidos_antes, "Fin: los pedidos pendientes se descartan sin sumar ni restar")
-	_ok(s.resultado.cuota_cumplida and s.resultado.estrellas == 1 and s.resultado.puntaje == 400, "Fin: 400 puntos en Fermi = cuota cumplida con 1 estrella")
+	_ok(s.resultado.cuota_cumplida and s.resultado.estrellas == 2 and s.resultado.puntaje == 400, "Fin: 400 puntos en Fermi = cuota cumplida con 2 estrellas (umbral de 350)")
 
 
 # ---------- Codice y progreso ----------

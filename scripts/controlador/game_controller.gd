@@ -8,8 +8,12 @@ var sesion: GameSession = null
 var progreso: ProgresoJugador = null
 var codice: Codice = null
 
+## Segundos de espera tras mover un volumen antes de guardar (agrupa las escrituras al arrastrar).
+const ESPERA_GUARDADO_VOLUMEN: float = 0.5
+
 var _nivel_actual: Nivel = null
 var _estaciones: Array[Estacion] = []
+var _guardado_pendiente: bool = false
 
 
 ## Carga el progreso y el Codice la primera vez que se necesitan (para entonces ya existen todos los autoloads).
@@ -43,11 +47,13 @@ func iniciar_partida(nivel: Nivel, estaciones: Array[Estacion], con_ficha: bool 
 	codice.descartar_pendientes()
 	_nivel_actual = nivel
 	_estaciones = estaciones
+	_desconectar_sesion()
 	sesion = GameSession.new()
 	sesion.receta_entregada.connect(_al_entregar_receta)
 	sesion.partida_terminada.connect(_al_terminar)
 	sesion.iniciar(nivel, estaciones, con_ficha)
 	partida_iniciada.emit(nivel)
+	EventBus.partida_iniciada.emit(nivel)
 	return sesion
 
 
@@ -89,18 +95,39 @@ func ajustar_volumen_musica(valor: float) -> void:
 	asegurar_inicializado()
 	progreso.volumen_musica = clampf(valor, 0.0, 1.0)
 	AudioController.ajustar_volumen("Musica", progreso.volumen_musica)
-	PersistenciaController.guardar(progreso)
+	_guardar_volumen_pronto()
 
 
 func ajustar_volumen_sfx(valor: float) -> void:
 	asegurar_inicializado()
 	progreso.volumen_sfx = clampf(valor, 0.0, 1.0)
 	AudioController.ajustar_volumen("SFX", progreso.volumen_sfx)
-	PersistenciaController.guardar(progreso)
+	_guardar_volumen_pronto()
+
+
+## Agrupa los cambios de volumen en una sola escritura; tambien se guarda al cerrar el juego.
+func _guardar_volumen_pronto() -> void:
+	if _guardado_pendiente:
+		return
+	_guardado_pendiente = true
+	get_tree().create_timer(ESPERA_GUARDADO_VOLUMEN).timeout.connect(_guardar_volumen_ahora)
+
+
+func _guardar_volumen_ahora() -> void:
+	if not _guardado_pendiente:
+		return
+	_guardado_pendiente = false
+	if progreso != null:
+		PersistenciaController.guardar(progreso)
+
+
+func _exit_tree() -> void:
+	_guardar_volumen_ahora()
 
 
 ## Primera entrega aceptada de una receta: desbloquea su entrada (queda pendiente hasta terminar el nivel).
 func _al_entregar_receta(receta: Receta) -> void:
+	EventBus.receta_entregada.emit(receta)
 	var entrada := codice.desbloquear(receta)
 	if entrada != null:
 		sesion.resultado.entradas_nuevas.append(entrada)
@@ -114,6 +141,7 @@ func _al_terminar(resultado: ResultadoPartida) -> void:
 	resultado.dato_curioso = _dato_curioso(resultado)
 	PersistenciaController.guardar(progreso)
 	partida_terminada.emit(resultado)
+	EventBus.partida_terminada.emit(resultado)
 
 
 ## Si no hay entrada nueva, se muestra el dato curioso del plato mas entregado.
@@ -124,3 +152,13 @@ func _dato_curioso(resultado: ResultadoPartida) -> String:
 	if entrada == null:
 		return ""
 	return entrada.dato_curioso
+
+
+## Evita que una sesion anterior siga conectada si se reinicia el nivel.
+func _desconectar_sesion() -> void:
+	if sesion == null:
+		return
+	if sesion.receta_entregada.is_connected(_al_entregar_receta):
+		sesion.receta_entregada.disconnect(_al_entregar_receta)
+	if sesion.partida_terminada.is_connected(_al_terminar):
+		sesion.partida_terminada.disconnect(_al_terminar)

@@ -112,7 +112,7 @@ func _boton(texto: String, accion: Callable, alto: float = 64.0) -> Button:
 
 
 func _al_pulsar(accion: Callable) -> void:
-	AudioController.reproducir_sfx("boton_menu")
+	EventBus.sfx_solicitado.emit("boton_menu")
 	accion.call()
 
 

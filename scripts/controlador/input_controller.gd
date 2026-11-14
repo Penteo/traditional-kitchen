@@ -21,3 +21,15 @@ func interactuar_presionado(numero_jugador: int) -> bool:
 ## True solo en el ciclo en que se pulsa la tecla de Procesar.
 func procesar_presionado(numero_jugador: int) -> bool:
 	return Input.is_action_just_pressed(ACCIONES[numero_jugador]["procesar"])
+
+
+## Texto de la tecla que el jugador debe pulsar, segun SU distribucion de teclado.
+## Las acciones usan posiciones fisicas: en un teclado latinoamericano la tecla de "/" muestra "-".
+## accion: "arriba", "abajo", "izquierda", "derecha", "interactuar" o "procesar".
+func texto_tecla(numero_jugador: int, accion: String) -> String:
+	var nombre: String = ACCIONES[numero_jugador][accion]
+	for evento in InputMap.action_get_events(nombre):
+		if evento is InputEventKey:
+			var codigo: Key = DisplayServer.keyboard_get_keycode_from_physical(evento.physical_keycode)
+			return OS.get_keycode_string(codigo)
+	return "?"

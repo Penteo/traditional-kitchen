@@ -190,27 +190,27 @@ func _mostrar_resultados(resultado: ResultadoPartida) -> void:
 # ---------- Efectos de sonido (Tabla 23): suenan cuando existan los archivos ----------
 func _conectar_audio(estaciones: Array[Estacion]) -> void:
 	var gestor := _sesion.gestor_pedidos
-	gestor.pedido_generado.connect(func(_p: Pedido) -> void: AudioController.reproducir_sfx("pedido_nuevo"))
-	gestor.pedido_entregado.connect(func(_p: Pedido) -> void: AudioController.reproducir_sfx("entrega_aceptada"))
-	gestor.pedido_vencido.connect(func(_p: Pedido) -> void: AudioController.reproducir_sfx("rechazo_vencimiento"))
-	gestor.pedido_rechazado.connect(func(_p: Pedido) -> void: AudioController.reproducir_sfx("rechazo_vencimiento"))
+	gestor.pedido_generado.connect(func(_p: Pedido) -> void: EventBus.sfx_solicitado.emit("pedido_nuevo"))
+	gestor.pedido_entregado.connect(func(_p: Pedido) -> void: EventBus.sfx_solicitado.emit("entrega_aceptada"))
+	gestor.pedido_vencido.connect(func(_p: Pedido) -> void: EventBus.sfx_solicitado.emit("rechazo_vencimiento"))
+	gestor.pedido_rechazado.connect(func(_p: Pedido) -> void: EventBus.sfx_solicitado.emit("rechazo_vencimiento"))
 	for estacion in estaciones:
 		var coccion := estacion as EstacionCoccion
 		if coccion != null:
 			coccion.estado_cambiado.connect(_al_cambiar_estado_coccion)
 		var tabla := estacion as TablaCortar
 		if tabla != null:
-			tabla.corte_iniciado.connect(func() -> void: AudioController.reproducir_sfx("picar"))
+			tabla.corte_iniciado.connect(func() -> void: EventBus.sfx_solicitado.emit("picar"))
 	for chef in _chefs:
-		chef.item_cambiado.connect(func() -> void: AudioController.reproducir_sfx("tomar_soltar"))
-	_controlador.accion_invalida.connect(func(_c: Chef) -> void: AudioController.reproducir_sfx("accion_invalida"))
+		chef.item_cambiado.connect(func() -> void: EventBus.sfx_solicitado.emit("tomar_soltar"))
+	_controlador.accion_invalida.connect(func(_c: Chef) -> void: EventBus.sfx_solicitado.emit("accion_invalida"))
 
 
 func _al_cambiar_estado_coccion(nuevo: EstacionCoccion.Estado) -> void:
 	match nuevo:
 		EstacionCoccion.Estado.LISTO:
-			AudioController.reproducir_sfx("estacion_lista")
+			EventBus.sfx_solicitado.emit("estacion_lista")
 		EstacionCoccion.Estado.PELIGRO:
-			AudioController.reproducir_sfx("peligro_quemado")
+			EventBus.sfx_solicitado.emit("peligro_quemado")
 		EstacionCoccion.Estado.QUEMADO:
-			AudioController.reproducir_sfx("quemado")
+			EventBus.sfx_solicitado.emit("quemado")
