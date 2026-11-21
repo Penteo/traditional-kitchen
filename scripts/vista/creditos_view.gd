@@ -1,6 +1,6 @@
 class_name CreditosView
 extends Pantalla
-## Cinco bloques (seccion 9.5). Los datos pendientes de registro se indican como tales.
+## Cuatro bloques (seccion 9.5). Los datos pendientes de registro se indican como tales.
 
 
 func _construir() -> void:
@@ -10,7 +10,6 @@ func _construir() -> void:
 	_bloque(columna, "Proyecto", "Traditional Kitchen, proyecto académico, 2026")
 	_bloque(columna, "Integrantes", "Yeison Suárez Suárez: desarrollo y programación\nJuan David Sepúlveda Rojas: diseño de juego y niveles\nEber Arley Arias Osorio: arte, animación y audio")
 	_bloque(columna, "Institución", "Asignatura Electiva Profesional II: Videojuegos\nPrograma de Ingeniería de Sistemas, Facultad de Ingeniería\nUniversidad de Investigación y Desarrollo")
-	_bloque(columna, "Activos de terceros", "Pendiente de registro (nombre, autor, licencia y enlace de cada activo).")
 	_bloque(columna, "Avisos de licencia", "Hecho con Godot Engine (licencia MIT).")
 	columna.add_child(_boton("Volver", func() -> void: volver_solicitado.emit()))
 
